@@ -27,15 +27,27 @@ package:
     - ./bin/**
 
 functions:
-  users:
-    handler: bin/users
+  users-create:
+    handler: bin/users/create
     events:
       - http:
           path: users
           method: post
+  users-update:
+    handler: bin/users/update
+    events:
       - http:
           path: users
           method: put
+  users-read:
+    handler: bin/users/read
+    events:
+      - http:
+          path: users/{id}
+          method: get
+  users-delete:
+    handler: bin/users/delete
+    events:
       - http:
           path: users/{id}
           method: get
