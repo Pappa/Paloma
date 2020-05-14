@@ -50,4 +50,4 @@ functions:
     events:
       - http:
           path: users/{id}
-          method: get
+          method: delete
