@@ -27,15 +27,15 @@ package:
     - ./bin/**
 
 functions:
-  hello:
-    handler: bin/hello
+  users:
+    handler: bin/users
     events:
       - http:
-          path: hello
-          method: get
-  world:
-    handler: bin/world
-    events:
+          path: users
+          method: post
       - http:
-          path: world
+          path: users
+          method: put
+      - http:
+          path: users/{id}
           method: get
