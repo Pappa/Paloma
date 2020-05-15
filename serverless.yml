@@ -11,14 +11,20 @@ provider:
   runtime: go1.x
   region: eu-west-1
   profile: serverless-agent
-
-# you can overwrite defaults here
-#  stage: dev
-#  region: us-east-1
-
-# environment variables
-#  environment:
-#    variable1: value1
+  environment:
+    USERS_TABLE: "users-${self:provider.stage}"
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource:
+        - "Fn::GetAtt": [UsersTable, Arn]
 
 package:
   exclude:
@@ -51,3 +57,13 @@ functions:
       - http:
           path: users/{id}
           method: delete
+
+resources:
+  # DynamoDB
+  - ${file(serverless-resources/dynamodb.yml)}
+# outputs:
+#   UsersTable:
+#     Value:
+#       Ref: UsersTable
+#     Export:
+#       Name: users-${self:provider.stage}
