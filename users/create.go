@@ -1,12 +1,19 @@
 package main
 
 import (
-	"bytes"
 	"context"
+	"fmt"
+	"os"
+	"errors"
 	"encoding/json"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+
+    "github.com/aws/aws-sdk-go/aws"
+    "github.com/aws/aws-sdk-go/aws/session"
+    "github.com/aws/aws-sdk-go/service/dynamodb"
+    "github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 )
 
 // Response is of type APIGatewayProxyResponse since we're leveraging the
@@ -18,22 +25,63 @@ type Context context.Context
 type Request events.APIGatewayProxyRequest
 type Response events.APIGatewayProxyResponse
 
+type User struct {
+    UserId string `json:"userId"`
+}
+
+type BodyRequest struct {
+	Id string `json:"id"`
+}
+
 // Handler is our lambda handler invoked by the `lambda.Start` function call
 func Handler(ctx Context, req Request) (Response, error) {
-	var buf bytes.Buffer
 
-	body, err := json.Marshal(req.PathParameters)
+	table, envErr := os.LookupEnv("USERS_TABLE")
+	if envErr != true {
+		return Response{StatusCode: 404}, errors.New(fmt.Sprintf("%s not found", table))
+	}
+
+	body := BodyRequest{
+		Id: "",
+	}
+
+	err := json.Unmarshal([]byte(req.Body), &body)
+
+	if err != nil {
+		return Response{Body: err.Error(), StatusCode: 404}, errors.New("Malformed JSON")
+	}
+
+	user := User{
+		UserId: body.Id,
+	}
+
+	sess := session.Must(session.NewSessionWithOptions(session.Options{
+		SharedConfigState: session.SharedConfigEnable,
+	}))
+	
+	svc := dynamodb.New(sess)
+	
+	av, err := dynamodbattribute.MarshalMap(user)
 	if err != nil {
 		return Response{StatusCode: 404}, err
 	}
-	json.HTMLEscape(&buf, body)
+
+	input := &dynamodb.PutItemInput{
+		Item:      av,
+		TableName: aws.String(table),
+	}
+
+	_, err = svc.PutItem(input)
+
+	if err != nil {
+		return Response{StatusCode: 404}, err
+	}
 
 	res := Response{
-		StatusCode:      200,
+		StatusCode: 200,
 		IsBase64Encoded: false,
-		Body:            buf.String(),
 		Headers: map[string]string{
-			"Content-Type":           "application/json",
+			"Content-Type": "application/json",
 		},
 	}
 
