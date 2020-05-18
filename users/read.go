@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"os"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -23,8 +22,6 @@ type Response events.APIGatewayProxyResponse
 func Handler(ctx Context, req Request) (Response, error) {
 	var buf bytes.Buffer
 
-	table, _ := os.LookupEnv("USERS_TABLE")
-
 	body, err := json.Marshal(req.PathParameters)
 	if err != nil {
 		return Response{StatusCode: 404}, err
@@ -37,7 +34,6 @@ func Handler(ctx Context, req Request) (Response, error) {
 		Body:            buf.String(),
 		Headers: map[string]string{
 			"Content-Type":           "application/json",
-			"X-Users-Table": table,
 		},
 	}
 

@@ -2,18 +2,10 @@ package main
 
 import (
 	"context"
-	"fmt"
-	"os"
-	"errors"
-	"encoding/json"
-
-	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 
-    "github.com/aws/aws-sdk-go/aws"
-    "github.com/aws/aws-sdk-go/aws/session"
-    "github.com/aws/aws-sdk-go/service/dynamodb"
-    "github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
+	"github.com/Pappa/Paloma/users/db"
+	"github.com/Pappa/Paloma/utils"
 )
 
 // Response is of type APIGatewayProxyResponse since we're leveraging the
@@ -22,62 +14,29 @@ import (
 // https://serverless.com/framework/docs/providers/aws/events/apigateway/#lambda-proxy-integration
 // https://github.com/aws/aws-lambda-go/blob/master/events/apigw.go
 type Context context.Context
-type Request events.APIGatewayProxyRequest
-type Response events.APIGatewayProxyResponse
-
-type User struct {
-    UserId string `json:"userId"`
-}
-
-type BodyRequest struct {
-	Id string `json:"id"`
-}
 
 // Handler is our lambda handler invoked by the `lambda.Start` function call
-func Handler(ctx Context, req Request) (Response, error) {
-
-	table, envErr := os.LookupEnv("USERS_TABLE")
-	if envErr != true {
-		return Response{StatusCode: 404}, errors.New(fmt.Sprintf("%s not found", table))
-	}
-
-	body := BodyRequest{
-		Id: "",
-	}
-
-	err := json.Unmarshal([]byte(req.Body), &body)
-
+func Handler(ctx Context, req utils.Request) (utils.Response, error) {
+	dbr, err := db.Init()
 	if err != nil {
-		return Response{Body: err.Error(), StatusCode: 404}, errors.New("Malformed JSON")
+		return utils.Response{StatusCode: 500}, err
 	}
 
-	user := User{
+	body, err := utils.GetRequestBody(req)
+	if err != nil {
+		return utils.Response{StatusCode: 500}, err
+	}
+
+	user := db.User{
 		UserId: body.Id,
 	}
 
-	sess := session.Must(session.NewSessionWithOptions(session.Options{
-		SharedConfigState: session.SharedConfigEnable,
-	}))
-	
-	svc := dynamodb.New(sess)
-	
-	av, err := dynamodbattribute.MarshalMap(user)
+	err = db.PutUser(dbr, &user)
 	if err != nil {
-		return Response{StatusCode: 404}, err
+		return utils.Response{StatusCode: 500}, err
 	}
 
-	input := &dynamodb.PutItemInput{
-		Item:      av,
-		TableName: aws.String(table),
-	}
-
-	_, err = svc.PutItem(input)
-
-	if err != nil {
-		return Response{StatusCode: 404}, err
-	}
-
-	res := Response{
+	res := utils.Response{
 		StatusCode: 200,
 		IsBase64Encoded: false,
 		Headers: map[string]string{
