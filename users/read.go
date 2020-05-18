@@ -3,32 +3,67 @@ package main
 import (
 	"bytes"
 	"context"
-	"encoding/json"
+	"errors"
+	//"encoding/json"
+	"fmt"
 
-	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+
+	"github.com/Pappa/Paloma/users/db"
+	"github.com/Pappa/Paloma/users/utils"
 )
 
-// Response is of type APIGatewayProxyResponse since we're leveraging the
-// AWS Lambda Proxy Request functionality (default behavior)
-//
-// https://serverless.com/framework/docs/providers/aws/events/apigateway/#lambda-proxy-integration
-// https://github.com/aws/aws-lambda-go/blob/master/events/apigw.go
 type Context context.Context
-type Request events.APIGatewayProxyRequest
-type Response events.APIGatewayProxyResponse
 
-// Handler is our lambda handler invoked by the `lambda.Start` function call
-func Handler(ctx Context, req Request) (Response, error) {
+func Handler(ctx Context, req utils.Request) (utils.Response, error) {
+	// var buf bytes.Buffer
+
+	// dbr, err := db.Init()
+	// if err != nil {
+	// 	return utils.Response{StatusCode: 500}, err
+	// }
+
+	// params, err := json.Marshal(req.PathParameters)
+	// if err != nil {
+	// 	return Response{StatusCode: 404}, err
+	// }
+	// fmt.Println("req.PathParameters", params)
+	// user, err := db.GetUser(dbr, params.Id)
+	// if err != nil {
+	// 	return utils.Response{StatusCode: 500}, err
+	// }
+	// fmt.Println("user", user)
+
+	// res := utils.Response{
+	// 	StatusCode:      200,
+	// 	IsBase64Encoded: false,
+	// 	Body:            json.Marshal(user),
+	// 	Headers: map[string]string{
+	// 		"Content-Type": "application/json",
+	// 	},
+	// }
+
+	// return res, nil
+
 	var buf bytes.Buffer
 
-	body, err := json.Marshal(req.PathParameters)
-	if err != nil {
-		return Response{StatusCode: 404}, err
+	userId, ok := req.PathParameters["id"]
+	if !ok {
+		return utils.Response{StatusCode: 500}, errors.New("Please provide a user id")
 	}
-	json.HTMLEscape(&buf, body)
 
-	res := Response{
+	dbr, err := db.Init()
+	if err != nil {
+		return utils.Response{StatusCode: 500}, err
+	}
+
+	user, err := db.GetUser(dbr, userId)
+	if err != nil {
+		return utils.Response{StatusCode: 500}, err
+	}
+	fmt.Println("user", user)
+
+	res := utils.Response{
 		StatusCode:      200,
 		IsBase64Encoded: false,
 		Body:            buf.String(),

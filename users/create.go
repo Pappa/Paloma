@@ -5,17 +5,11 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 
 	"github.com/Pappa/Paloma/users/db"
-	"github.com/Pappa/Paloma/utils"
+	"github.com/Pappa/Paloma/users/utils"
 )
 
-// Response is of type APIGatewayProxyResponse since we're leveraging the
-// AWS Lambda Proxy Request functionality (default behavior)
-//
-// https://serverless.com/framework/docs/providers/aws/events/apigateway/#lambda-proxy-integration
-// https://github.com/aws/aws-lambda-go/blob/master/events/apigw.go
 type Context context.Context
 
-// Handler is our lambda handler invoked by the `lambda.Start` function call
 func Handler(ctx Context, req utils.Request) (utils.Response, error) {
 	dbr, err := db.Init()
 	if err != nil {

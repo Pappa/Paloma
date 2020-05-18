@@ -50,3 +50,29 @@ func PutUser(r *DynamoDBRepository, user *User) error {
 
 	return err
 }
+
+func GetUser(r *DynamoDBRepository, userId string) (*User, error) {
+	input := &dynamodb.GetItemInput{
+		Key: map[string]*dynamodb.AttributeValue{
+			"userId": {
+				S: aws.String(userId),
+			},
+		},
+		TableName: aws.String(r.table),
+	}
+
+	item, err := r.client.GetItem(input)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println("item", item)
+
+	result := User{
+		UserId: "",
+	}
+
+	err = dynamodbattribute.UnmarshalMap(item.Item, &result)
+	fmt.Println("result", result)
+
+	return &result, err
+}
