@@ -76,3 +76,18 @@ func GetUser(r *DynamoDBRepository, userId string) (*User, error) {
 
 	return &result, err
 }
+
+func DeleteUser(r *DynamoDBRepository, userId string) error {
+	input := &dynamodb.DeleteItemInput{
+		Key: map[string]*dynamodb.AttributeValue{
+			"userId": {
+				S: aws.String(userId),
+			},
+		},
+		TableName: aws.String(r.table),
+	}
+
+	_, err := r.client.DeleteItem(input)
+
+	return err
+}
