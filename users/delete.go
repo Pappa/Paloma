@@ -13,7 +13,7 @@ import (
 type Context context.Context
 
 func Handler(ctx Context, req utils.Request) (utils.Response, error) {
-	userId, ok := req.PathParameters["id"]
+	id, ok := req.PathParameters["id"]
 	if !ok {
 		return utils.Response{StatusCode: 500}, errors.New("Please provide a user id")
 	}
@@ -23,7 +23,7 @@ func Handler(ctx Context, req utils.Request) (utils.Response, error) {
 		return utils.Response{StatusCode: 500}, err
 	}
 
-	err = db.DeleteUser(dbr, userId)
+	err = db.DeleteUser(dbr, id)
 	if err != nil {
 		return utils.Response{StatusCode: 500}, err
 	}

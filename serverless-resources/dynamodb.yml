@@ -2,12 +2,12 @@ Resources:
   UsersTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: users-${self:provider.stage}
+      TableName: paloma-users-${self:provider.stage}
       AttributeDefinitions:
-        - AttributeName: userId
+        - AttributeName: id
           AttributeType: S
       KeySchema:
-        - AttributeName: userId
+        - AttributeName: id
           KeyType: HASH
       ProvisionedThroughput:
         ReadCapacityUnits: 1

@@ -22,7 +22,7 @@ func Handler(ctx Context, req utils.Request) (utils.Response, error) {
 	}
 
 	user := db.User{
-		UserId: body.Id,
+		Id: body.Id,
 	}
 
 	err = db.PutUser(dbr, &user)

@@ -11,7 +11,7 @@ import (
 )
 
 type User struct {
-    UserId string `json:"userId"`
+    Id string `json:"id"`
 }
 
 // DynamoDBRepository -
@@ -51,11 +51,11 @@ func PutUser(r *DynamoDBRepository, user *User) error {
 	return err
 }
 
-func GetUser(r *DynamoDBRepository, userId string) (*User, error) {
+func GetUser(r *DynamoDBRepository, id string) (*User, error) {
 	input := &dynamodb.GetItemInput{
 		Key: map[string]*dynamodb.AttributeValue{
-			"userId": {
-				S: aws.String(userId),
+			"id": {
+				S: aws.String(id),
 			},
 		},
 		TableName: aws.String(r.table),
@@ -68,7 +68,7 @@ func GetUser(r *DynamoDBRepository, userId string) (*User, error) {
 	fmt.Println("item", item)
 
 	result := User{
-		UserId: "",
+		Id: "",
 	}
 
 	err = dynamodbattribute.UnmarshalMap(item.Item, &result)
@@ -77,11 +77,11 @@ func GetUser(r *DynamoDBRepository, userId string) (*User, error) {
 	return &result, err
 }
 
-func DeleteUser(r *DynamoDBRepository, userId string) error {
+func DeleteUser(r *DynamoDBRepository, id string) error {
 	input := &dynamodb.DeleteItemInput{
 		Key: map[string]*dynamodb.AttributeValue{
-			"userId": {
-				S: aws.String(userId),
+			"id": {
+				S: aws.String(id),
 			},
 		},
 		TableName: aws.String(r.table),

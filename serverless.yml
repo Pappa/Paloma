@@ -12,7 +12,7 @@ provider:
   region: eu-west-1
   profile: serverless-agent
   environment:
-    USERS_TABLE: "users-${self:provider.stage}"
+    USERS_TABLE: "paloma-users-${self:provider.stage}"
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -59,11 +59,4 @@ functions:
           method: delete
 
 resources:
-  # DynamoDB
   - ${file(serverless-resources/dynamodb.yml)}
-# outputs:
-#   UsersTable:
-#     Value:
-#       Ref: UsersTable
-#     Export:
-#       Name: users-${self:provider.stage}
