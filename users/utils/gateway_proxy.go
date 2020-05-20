@@ -24,3 +24,10 @@ func GetRequestBody(req Request) (RequestBody, error) {
 	err := json.Unmarshal([]byte(req.Body), &body)
 	return body, err
 }
+
+func ErrorResponse(status int, err error) Response {
+	return Response{ 
+		StatusCode: status, 
+		Body: err.Error(),
+	}
+}

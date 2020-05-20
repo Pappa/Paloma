@@ -13,12 +13,12 @@ type Context context.Context
 func Handler(ctx Context, req utils.Request) (utils.Response, error) {
 	dbr, err := db.Init()
 	if err != nil {
-		return utils.Response{StatusCode: 500}, err
+		return utils.ErrorResponse(500, err), nil
 	}
 
 	body, err := utils.GetRequestBody(req)
 	if err != nil {
-		return utils.Response{StatusCode: 500}, err
+		return utils.ErrorResponse(500, err), nil
 	}
 
 	user := db.User{
@@ -27,7 +27,7 @@ func Handler(ctx Context, req utils.Request) (utils.Response, error) {
 
 	err = db.PutUser(dbr, &user)
 	if err != nil {
-		return utils.Response{StatusCode: 500}, err
+		return utils.ErrorResponse(500, err), nil
 	}
 
 	res := utils.Response{

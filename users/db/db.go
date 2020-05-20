@@ -3,11 +3,12 @@ package db
 import (
 	"os"
 	"fmt"
-	"errors"
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/awserr"
     "github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
+	"github.com/aws/aws-sdk-go/service/dynamodb/expression"
 )
 
 type User struct {
@@ -20,10 +21,34 @@ type DynamoDBRepository struct {
 	table string
 }
 
+type TableNotFoundError struct {
+    Table string
+}
+
+func (e *TableNotFoundError) Error() string {
+    return fmt.Sprintf("%s: not found", e.Table)
+}
+
+type UserNotFoundError struct {
+    Id string
+}
+
+func (e *UserNotFoundError) Error() string {
+    return fmt.Sprintf("%s: user not found", e.Id)
+}
+
+type UserAlreadyExistsError struct {
+    Id string
+}
+
+func (e *UserAlreadyExistsError) Error() string {
+    return fmt.Sprintf("%s: user already exists", e.Id)
+}
+
 func Init() (*DynamoDBRepository, error) {
 	table, err := os.LookupEnv("USERS_TABLE")
 	if err != true {
-		return nil, errors.New(fmt.Sprintf("%s not found", table))
+		return nil, &TableNotFoundError{ Table: table }
 	}
 
 	sesh := session.Must(session.NewSessionWithOptions(session.Options{
@@ -41,13 +66,27 @@ func PutUser(r *DynamoDBRepository, user *User) error {
 		return err
 	}
 
+	cond := expression.AttributeNotExists(expression.Name("id"))
+	exp, err := expression.NewBuilder().WithCondition(cond).Build()
+	if err != nil {
+		return err
+	}
+
 	input := &dynamodb.PutItemInput{
-		Item:      attr,
+		Item: attr,
+		ExpressionAttributeNames: exp.Names(),
+		ConditionExpression: exp.Condition(),
 		TableName: aws.String(r.table),
 	}
 
 	_, err = r.client.PutItem(input)
-
+	if err != nil {
+		if aerr, ok := err.(awserr.Error); ok {
+			if aerr.Code() == dynamodb.ErrCodeConditionalCheckFailedException {
+				return &UserAlreadyExistsError{ Id: user.Id }
+			}
+		}
+	}
 	return err
 }
 
@@ -65,16 +104,18 @@ func GetUser(r *DynamoDBRepository, id string) (*User, error) {
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("item", item)
 
-	result := User{
-		Id: "",
+	if len(item.Item) == 0 {
+		return nil, &UserNotFoundError{ Id: id }
+	} else {
+		result := User{
+			Id: "",
+		}
+	
+		err = dynamodbattribute.UnmarshalMap(item.Item, &result)
+	
+		return &result, err
 	}
-
-	err = dynamodbattribute.UnmarshalMap(item.Item, &result)
-	fmt.Println("result", result)
-
-	return &result, err
 }
 
 func DeleteUser(r *DynamoDBRepository, id string) error {
