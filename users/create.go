@@ -27,7 +27,12 @@ func Handler(ctx Context, req utils.Request) (utils.Response, error) {
 
 	err = db.PutUser(dbr, &user)
 	if err != nil {
-		return utils.ErrorResponse(500, err), nil
+		switch err.(type) {
+		case *db.UserAlreadyExistsError:
+			return utils.ErrorResponse(403, err), nil
+		default:
+			return utils.ErrorResponse(500, err), nil
+		}
 	}
 
 	res := utils.Response{
