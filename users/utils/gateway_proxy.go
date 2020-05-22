@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"reflect"
 	"encoding/json"
 	"github.com/aws/aws-lambda-go/events"
 )
@@ -17,6 +18,12 @@ type RequestBody struct {
 	Id string `json:"id"`
 }
 
+type ErrorResponseBody struct {
+	Status int `json:"status"`
+	Error string `json:"error"`
+	Message string `json:"message"`
+}
+
 func GetRequestBody(req Request) (RequestBody, error) {
 	body := RequestBody{
 		Id: "",
@@ -26,8 +33,11 @@ func GetRequestBody(req Request) (RequestBody, error) {
 }
 
 func ErrorResponse(status int, err error) Response {
+	response := ErrorResponseBody{ Status: status, Error: reflect.TypeOf(err).Elem().Name(), Message: err.Error() }
+	body, _ := json.Marshal(response)
+
 	return Response{ 
 		StatusCode: status, 
-		Body: err.Error(),
+		Body: string(body),
 	}
 }
