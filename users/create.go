@@ -25,7 +25,7 @@ func Handler(ctx Context, req utils.Request) (utils.Response, error) {
 		Id: body.Id,
 	}
 
-	err = db.PutUser(dbr, &user)
+	err = db.PutUser(dbr, &user, db.Create)
 	if err != nil {
 		switch err.(type) {
 		case *db.UserAlreadyExistsError:

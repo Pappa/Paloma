@@ -25,6 +25,14 @@ type TableNotFoundError struct {
     Table string
 }
 
+type PutType int
+
+const (
+	Create PutType = iota
+	Update
+	Modify
+)
+
 func (e *TableNotFoundError) Error() string {
     return fmt.Sprintf("%s: not found", e.Table)
 }
@@ -60,23 +68,32 @@ func Init() (*DynamoDBRepository, error) {
 	return &DynamoDBRepository{client, table}, nil
 }
 
-func PutUser(r *DynamoDBRepository, user *User) error {
+func PutUser(r *DynamoDBRepository, user *User, putType PutType) error {
 	attr, err := dynamodbattribute.MarshalMap(user)
 	if err != nil {
 		return err
 	}
 
-	cond := expression.AttributeNotExists(expression.Name("id"))
-	exp, err := expression.NewBuilder().WithCondition(cond).Build()
-	if err != nil {
-		return err
-	}
+	var input *dynamodb.PutItemInput
 
-	input := &dynamodb.PutItemInput{
-		Item: attr,
-		ExpressionAttributeNames: exp.Names(),
-		ConditionExpression: exp.Condition(),
-		TableName: aws.String(r.table),
+	if putType == Create {
+		cond := expression.AttributeNotExists(expression.Name("id"))
+		exp, err := expression.NewBuilder().WithCondition(cond).Build()
+		if err != nil {
+			return err
+		}
+	
+		input = &dynamodb.PutItemInput{
+			Item: attr,
+			ExpressionAttributeNames: exp.Names(),
+			ConditionExpression: exp.Condition(),
+			TableName: aws.String(r.table),
+		}
+	} else {
+		input = &dynamodb.PutItemInput{
+			Item: attr,
+			TableName: aws.String(r.table),
+		}
 	}
 
 	_, err = r.client.PutItem(input)
