@@ -1,9 +1,9 @@
 package utils
 
 import (
-	"reflect"
 	"encoding/json"
 	"github.com/aws/aws-lambda-go/events"
+	"reflect"
 )
 
 // Response is of type APIGatewayProxyResponse since we're leveraging the
@@ -19,8 +19,8 @@ type RequestBody struct {
 }
 
 type ErrorResponseBody struct {
-	Status int `json:"status"`
-	Error string `json:"error"`
+	Status  int    `json:"status"`
+	Error   string `json:"error"`
 	Message string `json:"message"`
 }
 
@@ -33,11 +33,11 @@ func GetRequestBody(req Request) (RequestBody, error) {
 }
 
 func ErrorResponse(status int, err error) Response {
-	response := ErrorResponseBody{ Status: status, Error: reflect.TypeOf(err).Elem().Name(), Message: err.Error() }
+	response := ErrorResponseBody{Status: status, Error: reflect.TypeOf(err).Elem().Name(), Message: err.Error()}
 	body, _ := json.Marshal(response)
 
-	return Response{ 
-		StatusCode: status, 
-		Body: string(body),
+	return Response{
+		StatusCode: status,
+		Body:       string(body),
 	}
 }

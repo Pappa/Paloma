@@ -31,7 +31,7 @@ func Handler(ctx Context, req utils.Request) (utils.Response, error) {
 	}
 
 	res := utils.Response{
-		StatusCode: 200,
+		StatusCode:      204,
 		IsBase64Encoded: false,
 		Headers: map[string]string{
 			"Content-Type": "application/json",

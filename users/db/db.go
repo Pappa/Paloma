@@ -1,28 +1,28 @@
 package db
 
 import (
-	"os"
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
-    "github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 	"github.com/aws/aws-sdk-go/service/dynamodb/expression"
+	"os"
 )
 
 type User struct {
-    Id string `json:"id"`
+	Id string `json:"id"`
 }
 
 // DynamoDBRepository -
 type DynamoDBRepository struct {
-	client   *dynamodb.DynamoDB
-	table string
+	client *dynamodb.DynamoDB
+	table  string
 }
 
 type TableNotFoundError struct {
-    Table string
+	Table string
 }
 
 type PutType int
@@ -34,35 +34,35 @@ const (
 )
 
 func (e *TableNotFoundError) Error() string {
-    return fmt.Sprintf("%s: not found", e.Table)
+	return fmt.Sprintf("%s: not found", e.Table)
 }
 
 type UserNotFoundError struct {
-    Id string
+	Id string
 }
 
 func (e *UserNotFoundError) Error() string {
-    return fmt.Sprintf("%s: user not found", e.Id)
+	return fmt.Sprintf("%s: user not found", e.Id)
 }
 
 type UserAlreadyExistsError struct {
-    Id string
+	Id string
 }
 
 func (e *UserAlreadyExistsError) Error() string {
-    return fmt.Sprintf("%s: user already exists", e.Id)
+	return fmt.Sprintf("%s: user already exists", e.Id)
 }
 
 func Init() (*DynamoDBRepository, error) {
 	table, err := os.LookupEnv("USERS_TABLE")
 	if err != true {
-		return nil, &TableNotFoundError{ Table: table }
+		return nil, &TableNotFoundError{Table: table}
 	}
 
 	sesh := session.Must(session.NewSessionWithOptions(session.Options{
 		SharedConfigState: session.SharedConfigEnable,
 	}))
-	
+
 	client := dynamodb.New(sesh)
 
 	return &DynamoDBRepository{client, table}, nil
@@ -82,16 +82,16 @@ func PutUser(r *DynamoDBRepository, user *User, putType PutType) error {
 		if err != nil {
 			return err
 		}
-	
+
 		input = &dynamodb.PutItemInput{
-			Item: attr,
+			Item:                     attr,
 			ExpressionAttributeNames: exp.Names(),
-			ConditionExpression: exp.Condition(),
-			TableName: aws.String(r.table),
+			ConditionExpression:      exp.Condition(),
+			TableName:                aws.String(r.table),
 		}
 	} else {
 		input = &dynamodb.PutItemInput{
-			Item: attr,
+			Item:      attr,
 			TableName: aws.String(r.table),
 		}
 	}
@@ -100,7 +100,7 @@ func PutUser(r *DynamoDBRepository, user *User, putType PutType) error {
 	if err != nil {
 		if aerr, ok := err.(awserr.Error); ok {
 			if aerr.Code() == dynamodb.ErrCodeConditionalCheckFailedException {
-				return &UserAlreadyExistsError{ Id: user.Id }
+				return &UserAlreadyExistsError{Id: user.Id}
 			}
 		}
 	}
@@ -123,14 +123,14 @@ func GetUser(r *DynamoDBRepository, id string) (*User, error) {
 	}
 
 	if len(item.Item) == 0 {
-		return nil, &UserNotFoundError{ Id: id }
+		return nil, &UserNotFoundError{Id: id}
 	} else {
 		result := User{
 			Id: "",
 		}
-	
+
 		err = dynamodbattribute.UnmarshalMap(item.Item, &result)
-	
+
 		return &result, err
 	}
 }

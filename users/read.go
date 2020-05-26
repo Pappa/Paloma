@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
-	"errors"
 	"encoding/json"
+	"errors"
 
 	"github.com/aws/aws-lambda-go/lambda"
 
@@ -40,9 +40,9 @@ func Handler(ctx Context, req utils.Request) (utils.Response, error) {
 	}
 
 	res := utils.Response{
-		StatusCode: 200,
+		StatusCode:      200,
 		IsBase64Encoded: false,
-		Body: string(body),
+		Body:            string(body),
 		Headers: map[string]string{
 			"Content-Type": "application/json",
 		},
