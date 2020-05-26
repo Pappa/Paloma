@@ -60,3 +60,4 @@ functions:
 
 resources:
   - ${file(serverless-resources/dynamodb.yml)}
+  - ${file(serverless-resources/cognito.yml)}
