@@ -1,0 +1,67 @@
+service: paloma
+app: paloma
+# org: DungBeetleBASH
+
+# Serverless version
+# Check out our docs for more details
+frameworkVersion: ">=1.28.0 <2.0.0"
+
+provider:
+  name: aws
+  runtime: go1.x
+  region: eu-west-1
+  profile: serverless-agent
+  environment:
+    USERS_TABLE: "paloma-users-${self:provider.stage}"
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource:
+        - "Fn::GetAtt": [UsersTable, Arn]
+
+package:
+  exclude:
+    - ./**
+  include:
+    - ./bin/**
+
+functions:
+  users-create:
+    handler: bin/users/create
+    events:
+      - http:
+          path: users
+          method: post
+          cors: true
+  users-update:
+    handler: bin/users/update
+    events:
+      - http:
+          path: users
+          method: put
+          cors: true
+  users-read:
+    handler: bin/users/read
+    events:
+      - http:
+          path: users/{id}
+          method: get
+          cors: true
+  users-delete:
+    handler: bin/users/delete
+    events:
+      - http:
+          path: users/{id}
+          method: delete
+          cors: true
+
+resources:
+  - ${file(resources/dynamodb.yml)}
+  - ${file(resources/cognito.yml)}
