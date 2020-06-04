@@ -1,7 +1,8 @@
-package main
+package create
 
 import (
 	"context"
+
 	"github.com/aws/aws-lambda-go/lambda"
 
 	"github.com/Pappa/Paloma/users/db"

@@ -1,8 +1,7 @@
-package main
+package update
 
 import (
 	"context"
-	"errors"
 
 	"github.com/aws/aws-lambda-go/lambda"
 
@@ -13,23 +12,27 @@ import (
 type Context context.Context
 
 func Handler(ctx Context, req utils.Request) (utils.Response, error) {
-	id, ok := req.PathParameters["id"]
-	if !ok {
-		return utils.ErrorResponse(500, errors.New("Please provide a user id")), nil
-	}
-
 	dbr, err := db.Init()
 	if err != nil {
 		return utils.ErrorResponse(500, err), nil
 	}
 
-	err = db.DeleteUser(dbr, id)
+	body, err := utils.GetRequestBody(req)
+	if err != nil {
+		return utils.ErrorResponse(500, err), nil
+	}
+
+	user := db.User{
+		Id: body.Id,
+	}
+
+	err = db.PutUser(dbr, &user, db.Update)
 	if err != nil {
 		return utils.ErrorResponse(500, err), nil
 	}
 
 	res := utils.Response{
-		StatusCode:      200,
+		StatusCode:      204,
 		IsBase64Encoded: false,
 		Headers: map[string]string{
 			"Content-Type": "application/json",
