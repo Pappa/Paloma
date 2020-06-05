@@ -1,21 +1,23 @@
-import { configureStore } from "@reduxjs/toolkit";
-import { compose, applyMiddleware } from "redux";
+import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import reducer from "./reducers";
 import { createEpicMiddleware } from "redux-observable";
-import epics, { createEpicSubject, createRootEpic } from "./epics";
+import { createEpicSubject, createRootEpic } from "./utils";
+import * as epics from "./epics";
 
 export const initStore = (dependencies = {}) => {
-  const composeMiddleware = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-    : compose;
-
-  const epicMiddleware = createEpicMiddleware(/*{ dependencies }*/);
+  const epicMiddleware = createEpicMiddleware({ dependencies });
   const epic$ = createEpicSubject(epics);
   const rootEpic = createRootEpic(epic$);
 
   const store = configureStore({
     reducer,
-    middleware: [epicMiddleware], //composeMiddleware(applyMiddleware(epicMiddleware)),
+    middleware: [
+      ...getDefaultMiddleware({
+        thunk: false,
+      }),
+      epicMiddleware,
+    ],
+    devTools: true,
   });
 
   epicMiddleware.run(rootEpic);
