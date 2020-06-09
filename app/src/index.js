@@ -1,10 +1,16 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
 import App from "./App";
 import { initStore } from "./app/store";
 import { Provider } from "react-redux";
 import * as serviceWorker from "./serviceWorker";
+import Auth from "@aws-amplify/auth";
+
+Auth.configure({
+  userPoolId: "eu-west-1_s7nGlS2xW",
+  userPoolWebClientId: "3rk9dm8llq6sulf3jr05j90a11",
+  region: "eu-west-1",
+});
 
 const store = initStore();
 
