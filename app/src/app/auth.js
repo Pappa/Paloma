@@ -1,4 +1,4 @@
-import { signInSuccess, signOutSuccess } from "../features/auth/authSlice";
+import { signInSuccess, signOut } from "../features/auth/authSlice";
 
 export const onAuthStateChange = (dispatch, state, data) => {
   switch (state) {
@@ -6,5 +6,11 @@ export const onAuthStateChange = (dispatch, state, data) => {
       dispatch(
         signInSuccess({ username: data.username, email: data.attributes.email })
       );
+      break;
+    case "signin":
+      !data && dispatch(signOut());
+      break;
+    default:
+      break;
   }
 };

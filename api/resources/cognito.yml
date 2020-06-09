@@ -3,7 +3,7 @@ Resources:
     Type: AWS::Cognito::UserPool
     Properties:
       UserPoolName: ${self:provider.stage}-paloma-user-pool
-      UsernameAttributes:
+      AliasAttributes:
         - email
       AutoVerifiedAttributes:
         - email
