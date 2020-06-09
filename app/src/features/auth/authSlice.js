@@ -4,14 +4,17 @@ export const authSlice = createSlice({
   name: "auth",
   initialState: {
     authenticated: false,
+    user: {},
   },
   reducers: {
-    signInSuccess: (state) => {
+    signInSuccess: (state, { payload: { username, email } }) => {
       // Not mutating - using Immer library
       state.authenticated = true;
+      state.user = {};
     },
     signOutSuccess: (state) => {
       state.authenticated = false;
+      state.user = { username, email };
     },
   },
 });

@@ -5,13 +5,18 @@ import {
   AmplifySignIn,
   AmplifySignOut,
 } from "@aws-amplify/ui-react";
+import { useDispatch } from "react-redux";
+import { onAuthStateChange } from "./app/auth";
+import partial from "lodash/partial";
 
 function App() {
+  const dispatch = useDispatch();
   return (
-    <AmplifyAuthenticator usernameAlias="email">
+    <AmplifyAuthenticator
+      handleAuthStateChange={partial(onAuthStateChange, dispatch)}
+    >
       <AmplifySignUp
         slot="sign-up"
-        usernameAlias="email"
         formFields={[
           {
             type: "username",
@@ -27,7 +32,7 @@ function App() {
           },
         ]}
       />
-      <AmplifySignIn slot="sign-in" usernameAlias="email" />
+      <AmplifySignIn slot="sign-in" />
       <AmplifySignOut />
     </AmplifyAuthenticator>
   );
