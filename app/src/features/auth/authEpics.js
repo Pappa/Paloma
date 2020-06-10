@@ -4,5 +4,5 @@ import { ofType } from "redux-observable";
 import { signUp } from "./authSlice";
 import Auth from "@aws-amplify/auth";
 
-export const incrementEpic = (action$, state$) =>
+export const authEpic = (action$, state$) =>
   action$.pipe(ofType(signUp.type), tap(console.log.bind(null, "before")));
