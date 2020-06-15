@@ -2,17 +2,19 @@ package db
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 	"github.com/aws/aws-sdk-go/service/dynamodb/expression"
-	"os"
 )
 
 type User struct {
-	Id string `json:"id"`
+	Id       string `json:"id"`
+	Username string `json:"username"`
 }
 
 // DynamoDBRepository -

@@ -12,7 +12,7 @@ provider:
   region: eu-west-1
   profile: serverless-agent
   environment:
-    USERS_TABLE: "paloma-users-${self:provider.stage}"
+    USERS_TABLE: "PalomaUsers${self:provider.stage}"
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -33,28 +33,34 @@ package:
     - ./bin/**
 
 functions:
-  users-create:
+  UsersPostConfirm:
+    handler: bin/users/postConfirm
+    events:
+      - cognitoUserPool:
+          pool: ${self:provider.stage}PalomaUserPool
+          trigger: PostConfirmation
+  UsersCreate:
     handler: bin/users/create
     events:
       - http:
           path: users
           method: post
           cors: true
-  users-update:
+  UsersUpdate:
     handler: bin/users/update
     events:
       - http:
           path: users
           method: put
           cors: true
-  users-read:
+  UsersRead:
     handler: bin/users/read
     events:
       - http:
           path: users/{id}
           method: get
           cors: true
-  users-delete:
+  UsersDelete:
     handler: bin/users/delete
     events:
       - http:

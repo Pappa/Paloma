@@ -2,7 +2,7 @@ Resources:
   UsersTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: paloma-users-${self:provider.stage}
+      TableName: PalomaUsers${self:provider.stage}
       AttributeDefinitions:
         - AttributeName: id
           AttributeType: S

@@ -2,7 +2,7 @@ Resources:
   CognitoUserPool:
     Type: AWS::Cognito::UserPool
     Properties:
-      UserPoolName: ${self:provider.stage}-paloma-user-pool
+      UserPoolName: ${self:provider.stage}PalomaUserPool
       AliasAttributes:
         - email
       AutoVerifiedAttributes:
@@ -11,7 +11,7 @@ Resources:
   CognitoUserPoolClient:
     Type: AWS::Cognito::UserPoolClient
     Properties:
-      ClientName: ${self:provider.stage}-paloma-user-pool-client
+      ClientName: ${self:provider.stage}PalomaUserPoolClient
       UserPoolId:
         Ref: CognitoUserPool
       ExplicitAuthFlows:
