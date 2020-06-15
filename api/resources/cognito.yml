@@ -1,5 +1,5 @@
 Resources:
-  CognitoUserPool:
+  CognitoUserPoolPalomaUsers:
     Type: AWS::Cognito::UserPool
     Properties:
       UserPoolName: ${self:provider.stage}PalomaUserPool
@@ -13,7 +13,7 @@ Resources:
     Properties:
       ClientName: ${self:provider.stage}PalomaUserPoolClient
       UserPoolId:
-        Ref: CognitoUserPool
+        Ref: CognitoUserPoolPalomaUsers
       ExplicitAuthFlows:
         - ADMIN_NO_SRP_AUTH
       GenerateSecret: false
@@ -31,7 +31,7 @@ Resources:
         - ClientId:
             Ref: CognitoUserPoolClient
           ProviderName:
-            Fn::GetAtt: ["CognitoUserPool", "ProviderName"]
+            Fn::GetAtt: ["CognitoUserPoolPalomaUsers", "ProviderName"]
 
   # IAM roles
   CognitoIdentityPoolRoles:
@@ -89,10 +89,27 @@ Resources:
                       - Ref: ApiGatewayRestApi
                       - "/*"
 
+              # Allow users to call a lambda
+              - Effect: "Allow"
+                Action:
+                  - lambda:InvokeFunction
+                  - lambda:InvokeAsync
+                Resource:
+                  Fn::Join:
+                    - ""
+                    - - "arn:aws:lambda:"
+                      - Ref: AWS::Region
+                      - ":"
+                      - Ref: AWS::AccountId
+                      - ":"
+                      - "paloma-"
+                      - ${self:provider.stage}
+                      - "-UsersPostConfirm"
+
 Outputs:
   UserPoolId:
     Value:
-      Ref: CognitoUserPool
+      Ref: CognitoUserPoolPalomaUsers
 
   UserPoolClientId:
     Value:

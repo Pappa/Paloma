@@ -37,7 +37,7 @@ functions:
     handler: bin/users/postConfirm
     events:
       - cognitoUserPool:
-          pool: ${self:provider.stage}PalomaUserPool
+          pool: PalomaUsers
           trigger: PostConfirmation
   UsersCreate:
     handler: bin/users/create
