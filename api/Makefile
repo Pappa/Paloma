@@ -2,7 +2,7 @@
 
 build:
 	env GOOS=linux go build -ldflags="-s -w" -o bin/users/create users/create/create.go
-	env GOOS=linux go build -ldflags="-s -w" -o bin/users/postConfirm users/create/postConfirm.go
+	env GOOS=linux go build -ldflags="-s -w" -o bin/users/confirm users/confirm/confirm.go
 	env GOOS=linux go build -ldflags="-s -w" -o bin/users/read users/read/read.go
 	env GOOS=linux go build -ldflags="-s -w" -o bin/users/update users/update/update.go
 	env GOOS=linux go build -ldflags="-s -w" -o bin/users/delete users/delete/delete.go

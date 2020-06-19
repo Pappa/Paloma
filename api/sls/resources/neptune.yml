@@ -1,0 +1,16 @@
+Resources:
+  PalomaDBCluster:
+    Type: AWS::Neptune::DBCluster
+  PalomaDBInstance:
+    Type: AWS::Neptune::DBInstance
+    Properties:
+      DBInstanceClass: db.t3.medium
+      DBClusterIdentifier: !Ref PalomaDBCluster
+
+Outputs:
+  PalomaPedigreesCluster:
+    Value:
+      Ref: PalomaDBCluster
+  PalomaPedigreesInstance:
+    Value:
+      Ref: PalomaDBInstance

@@ -33,41 +33,9 @@ package:
     - ./bin/**
 
 functions:
-  UsersPostConfirm:
-    handler: bin/users/postConfirm
-    events:
-      - cognitoUserPool:
-          pool: PalomaUsers
-          trigger: PostConfirmation
-  UsersCreate:
-    handler: bin/users/create
-    events:
-      - http:
-          path: users
-          method: post
-          cors: true
-  UsersUpdate:
-    handler: bin/users/update
-    events:
-      - http:
-          path: users
-          method: put
-          cors: true
-  UsersRead:
-    handler: bin/users/read
-    events:
-      - http:
-          path: users/{id}
-          method: get
-          cors: true
-  UsersDelete:
-    handler: bin/users/delete
-    events:
-      - http:
-          path: users/{id}
-          method: delete
-          cors: true
+  - ${file(sls/functions/users.yml)}
 
 resources:
-  - ${file(resources/dynamodb.yml)}
-  - ${file(resources/cognito.yml)}
+  - ${file(sls/resources/neptune.yml)}
+  - ${file(sls/resources/dynamodb.yml)}
+  - ${file(sls/resources/cognito.yml)}
