@@ -36,6 +36,6 @@ functions:
   - ${file(sls/functions/users.yml)}
 
 resources:
-  - ${file(sls/resources/neptune.yml)}
+  # - ${file(sls/resources/neptune.yml)}
   - ${file(sls/resources/dynamodb.yml)}
   - ${file(sls/resources/cognito.yml)}
