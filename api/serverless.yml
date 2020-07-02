@@ -25,6 +25,11 @@ provider:
         - dynamodb:DeleteItem
       Resource:
         - "Fn::GetAtt": [UsersTable, Arn]
+    - Effect: Allow
+      Action:
+        - neptune-db:*
+      Resource:
+        - "Fn::GetAtt": [PalomaDBCluster, Arn]
 
 package:
   exclude:
