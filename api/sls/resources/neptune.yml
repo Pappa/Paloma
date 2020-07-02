@@ -8,9 +8,9 @@ Resources:
       DBClusterIdentifier: !Ref PalomaDBCluster
 
 Outputs:
-  PalomaPedigreesCluster:
+  PalomaDBCluster:
     Value:
       Ref: PalomaDBCluster
-  PalomaPedigreesInstance:
+  PalomaDBInstance:
     Value:
       Ref: PalomaDBInstance

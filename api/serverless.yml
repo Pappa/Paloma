@@ -29,7 +29,14 @@ provider:
       Action:
         - neptune-db:*
       Resource:
-        - "Fn::GetAtt": [PalomaDBCluster, Arn]
+        Fn::Join:
+          - ""
+          - - "arn:aws:rds:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":cluster:"
+            - Ref: PalomaDBCluster
 
 package:
   exclude:
@@ -41,6 +48,6 @@ functions:
   - ${file(sls/functions/users.yml)}
 
 resources:
-  # - ${file(sls/resources/neptune.yml)}
+  - ${file(sls/resources/neptune.yml)}
   - ${file(sls/resources/dynamodb.yml)}
   - ${file(sls/resources/cognito.yml)}
