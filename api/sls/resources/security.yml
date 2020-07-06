@@ -1,0 +1,11 @@
+Resources:
+  PalomaLambdaSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Ref PalomaVpc
+      GroupDescription: "Paloma Lambda Security Group"
+
+Outputs:
+  PalomaLambdaSecurityGroupId:
+    Value:
+      Ref: PalomaLambdaSecurityGroup

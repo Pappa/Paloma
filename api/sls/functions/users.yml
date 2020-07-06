@@ -32,3 +32,10 @@ UsersDelete:
         path: users/{id}
         method: delete
         cors: true
+UsersGraph:
+  handler: bin/users/graph
+  events:
+    - http:
+        path: users/graph
+        method: get
+        cors: true

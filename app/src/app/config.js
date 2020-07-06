@@ -1,12 +1,12 @@
 const dev = {
   API: {
-    BASE_URL: "h3hac79529.execute-api.eu-west-1.amazonaws.com/dev",
+    BASE_URL: "6c28r5f7ll.execute-api.eu-west-1.amazonaws.com/dev",
   },
 };
 
 const prod = {
   API: {
-    BASE_URL: "h3hac79529.execute-api.eu-west-1.amazonaws.com/prod",
+    BASE_URL: "6c28r5f7ll.execute-api.eu-west-1.amazonaws.com/prod",
   },
 };
 

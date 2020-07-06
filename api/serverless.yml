@@ -1,5 +1,6 @@
 service: paloma
 app: paloma
+tenant: drpappa
 # org: DungBeetleBASH
 
 # Serverless version
@@ -13,6 +14,15 @@ provider:
   profile: serverless-agent
   environment:
     USERS_TABLE: "PalomaUsers${self:provider.stage}"
+  stackTags:
+    app: paloma
+  vpc:
+    securityGroupIds:
+      - sg-102ac57f
+    subnetIds:
+      - subnet-49e77422
+      - subnet-48e77423
+      - subnet-4fe77424
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -48,6 +58,8 @@ functions:
   - ${file(sls/functions/users.yml)}
 
 resources:
+  #- ${file(sls/resources/vpc.yml)}
+  #- ${file(sls/resources/security.yml)}
   - ${file(sls/resources/neptune.yml)}
   - ${file(sls/resources/dynamodb.yml)}
   - ${file(sls/resources/cognito.yml)}

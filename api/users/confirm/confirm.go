@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-
 	"github.com/Pappa/Paloma/users/db"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
