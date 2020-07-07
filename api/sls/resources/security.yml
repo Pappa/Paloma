@@ -1,11 +1,34 @@
 Resources:
-  PalomaLambdaSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      VpcId: !Ref PalomaVpc
-      GroupDescription: "Paloma Lambda Security Group"
+  #   PalomaLambdaSecurityGroup:
+  #     Type: AWS::EC2::SecurityGroup
+  #     Properties:
+  #       VpcId: !Ref PalomaVpc
+  #       GroupDescription: "Paloma Lambda Security Group"
+  # Outputs:
+  #   PalomaLambdaSecurityGroupId:
+  #     Value:
+  #       Ref: PalomaLambdaSecurityGroup
+  #   PalomaCertificate:
+  #     Type: AWS::CertificateManager::Certificate
+  #     Properties:
+  #       DomainName: "*.loftmanager.co.uk"
 
-Outputs:
-  PalomaLambdaSecurityGroupId:
-    Value:
-      Ref: PalomaLambdaSecurityGroup
+  # Outputs:
+  #   PalomaCertificateId:
+  #     Value:
+  #       Ref: PalomaCertificate
+
+  VpnAccessRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: VpnAccessRole
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole

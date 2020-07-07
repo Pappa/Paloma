@@ -33,6 +33,7 @@ UsersDelete:
         method: delete
         cors: true
 UsersGraph:
+  role: VpnAccessRole
   handler: bin/users/graph
   events:
     - http:
