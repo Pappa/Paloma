@@ -11,13 +11,13 @@ UsersCreate:
         path: users
         method: post
         cors: true
-UsersUpdate:
-  handler: bin/users/update
-  events:
-    - http:
-        path: users
-        method: put
-        cors: true
+# UsersUpdate:
+#   handler: bin/users/update
+#   events:
+#     - http:
+#         path: users
+#         method: put
+#         cors: true
 UsersRead:
   handler: bin/users/read
   events:
@@ -25,13 +25,13 @@ UsersRead:
         path: users/{id}
         method: get
         cors: true
-UsersDelete:
-  handler: bin/users/delete
-  events:
-    - http:
-        path: users/{id}
-        method: delete
-        cors: true
+# UsersDelete:
+#   handler: bin/users/delete
+#   events:
+#     - http:
+#         path: users/{id}
+#         method: delete
+#         cors: true
 UsersGraph:
   role: VpnAccessRole
   handler: bin/users/graph
