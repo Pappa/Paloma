@@ -27,21 +27,23 @@ func Handler(ctx Context, req utils.Request) (utils.Response, error) {
     }
 
     // Executing a basic query to assure that the client is working.
-    res, err := client.ExecuteStringQuery("1+3")
+    _, err = client.AddVertexByString("g.addV('person').property('name', 'damien')")
     if err != nil {
         log.Fatalf("Querying error: %s\n", err.Error())
 		return utils.ErrorResponse(500, err), nil
     }
 
-    // Print out the result as a string
-    for _, r := range res {
-        log.Println(string(r))
+    
+	count, err := client.VertexCount()
+    if err != nil {
+        log.Fatalf("Querying error: %s\n", err.Error())
+		return utils.ErrorResponse(500, err), nil
     }
 
 	resp := utils.Response{
 		StatusCode:      200,
 		IsBase64Encoded: false,
-		Body:            "ok",
+		Body:            string(count),
 		Headers: map[string]string{
 			"Content-Type": "application/json",
 		},

@@ -17,13 +17,6 @@ provider:
     NEPTUNE_CLUSTER_ADDRESS: ${cf:paloma-dev.PalomaDBClusterEndpointAddress}
   stackTags:
     app: paloma
-  # vpc:
-  #   securityGroupIds:
-  #     - sg-102ac57f
-  #   subnetIds:
-  #     - subnet-49e77422
-  #     - subnet-48e77423
-  #     - subnet-4fe77424
   iamRoleStatements:
     - Effect: Allow
       Action:

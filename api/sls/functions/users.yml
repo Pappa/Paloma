@@ -35,6 +35,13 @@ UsersRead:
 UsersGraph:
   role: VpnAccessRole
   handler: bin/users/graph
+  vpc:
+    securityGroupIds:
+      - sg-102ac57f
+    subnetIds:
+      - subnet-49e77422
+      - subnet-48e77423
+      - subnet-4fe77424
   events:
     - http:
         path: users/graph
