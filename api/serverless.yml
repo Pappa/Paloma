@@ -47,6 +47,7 @@ package:
     - ./**
   include:
     - ./bin/**
+    - ./src/**
 
 functions:
   - ${file(sls/functions/users.yml)}

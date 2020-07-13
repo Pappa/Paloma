@@ -15,4 +15,4 @@ Outputs:
     Value:
       Ref: PalomaDBInstance
   PalomaDBClusterEndpointAddress:
-    Value: !GetAtt PalomaDBCluster.Endpoint.Address
+    Value: !GetAtt PalomaDBCluster.Endpoint
