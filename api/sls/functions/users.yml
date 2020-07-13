@@ -49,7 +49,7 @@
 #         cors: true
 Gremlin:
   role: VpnAccessRole
-  handler: "src/functions/gremlin.handler"
+  handler: build/gremlin.handler
   runtime: python3.8
   vpc:
     securityGroupIds:
