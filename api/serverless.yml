@@ -46,7 +46,6 @@ package:
   exclude:
     - ./**
   include:
-    - ./src/*
     - ./src/**
     #- ./bin/**
 
