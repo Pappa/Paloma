@@ -14,7 +14,7 @@ provider:
   profile: serverless-agent
   environment:
     USERS_TABLE: "PalomaUsers${self:provider.stage}"
-    NEPTUNE_CLUSTER_ADDRESS: ${cf:paloma-dev.PalomaDBClusterEndpointAddress}
+    # NEPTUNE_CLUSTER_ADDRESS: ${cf:paloma-dev.PalomaDBClusterEndpointAddress}
   stackTags:
     app: paloma
   iamRoleStatements:
@@ -46,14 +46,13 @@ package:
   exclude:
     - ./**
   include:
-    - ./src/**
-    #- ./bin/**
+    - ./*.py
+    - ./src/functions/**
 
 functions:
   - ${file(sls/functions/users.yml)}
 
 resources:
-  #- ${file(sls/resources/vpc.yml)}
   - ${file(sls/resources/security.yml)}
   - ${file(sls/resources/neptune.yml)}
   - ${file(sls/resources/dynamodb.yml)}
