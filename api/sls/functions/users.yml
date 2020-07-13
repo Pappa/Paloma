@@ -1,16 +1,16 @@
-UsersPostConfirm:
-  handler: bin/users/confirm
-  events:
-    - cognitoUserPool:
-        pool: PalomaUsers
-        trigger: PostConfirmation
-UsersCreate:
-  handler: bin/users/create
-  events:
-    - http:
-        path: users
-        method: post
-        cors: true
+# UsersPostConfirm:
+#   handler: bin/users/confirm
+#   events:
+#     - cognitoUserPool:
+#         pool: PalomaUsers
+#         trigger: PostConfirmation
+# UsersCreate:
+#   handler: bin/users/create
+#   events:
+#     - http:
+#         path: users
+#         method: post
+#         cors: true
 # UsersUpdate:
 #   handler: bin/users/update
 #   events:
@@ -18,13 +18,13 @@ UsersCreate:
 #         path: users
 #         method: put
 #         cors: true
-UsersRead:
-  handler: bin/users/read
-  events:
-    - http:
-        path: users/{id}
-        method: get
-        cors: true
+# UsersRead:
+#   handler: bin/users/read
+#   events:
+#     - http:
+#         path: users/{id}
+#         method: get
+#         cors: true
 # UsersDelete:
 #   handler: bin/users/delete
 #   events:
@@ -32,24 +32,24 @@ UsersRead:
 #         path: users/{id}
 #         method: delete
 #         cors: true
-UsersGraph:
-  role: VpnAccessRole
-  handler: bin/users/graph
-  vpc:
-    securityGroupIds:
-      - sg-102ac57f
-    subnetIds:
-      - subnet-49e77422
-      - subnet-48e77423
-      - subnet-4fe77424
-  events:
-    - http:
-        path: users/graph
-        method: get
-        cors: true
+# UsersGraph:
+#   role: VpnAccessRole
+#   handler: bin/users/graph
+#   vpc:
+#     securityGroupIds:
+#       - sg-102ac57f
+#     subnetIds:
+#       - subnet-49e77422
+#       - subnet-48e77423
+#       - subnet-4fe77424
+#   events:
+#     - http:
+#         path: users/graph
+#         method: get
+#         cors: true
 Gremlin:
   role: VpnAccessRole
-  handler: src/gremlin.handler
+  handler: src/functions/gremlin.handler
   runtime: python3.8
   vpc:
     securityGroupIds:
