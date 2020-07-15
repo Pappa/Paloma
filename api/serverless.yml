@@ -1,6 +1,6 @@
 service: paloma
 app: paloma
-tenant: drpappa
+# tenant: drpappa
 # org: DungBeetleBASH
 
 # Serverless version

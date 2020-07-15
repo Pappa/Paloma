@@ -15,21 +15,44 @@ import json
 def handler(event, context):
     db = os.getenv('NEPTUNE_CLUSTER_ADDRESS')
     logging.info(f"NEPTUNE_CLUSTER_ADDRESS: {db}")
+    event_string = json.dumps(event, sort_keys=True, indent=4)
+    logging.info(f"event: {event_string}")
 
     try:
         g = setup_graph(f"wss://{db}:8182/gremlin")
-        response = {
-            "statusCode": 200,
-            "body": ""
-        }
-        return response
     except Exception as e:
         logging.error(e, exc_info=True)
+        response_body = {
+            "event": event,
+            "error": str(e)
+        }
         response = {
             "statusCode": 500,
-            "body": str(e)
+            "body": json.dumps(response_body)
         }
         return response
+
+    if (event["httpMethod"] == "POST"):
+        if (event["resource"] == "/gremlin/users"):
+            body = json.loads(event["body"])
+            email = body["email"]
+            g.V().hasLabel("user").has('email', email).fold().coalesce(
+                __.unfold(),
+                __.addV().property('email', email)
+            ).next()
+
+    graph = g.V().values("id", "email", "username").toList()
+    print(graph)
+    logging.info(f"graph: {json.dumps(graph, sort_keys=True, indent=4)}")
+    response_body = {
+        "event": event,
+        "graph": graph
+    }
+    response = {
+        "statusCode": 200,
+        "body": json.dumps(response_body)
+    }
+    return response
 
 
 def setup_graph(addr):

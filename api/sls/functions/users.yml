@@ -1,9 +1,17 @@
-# UsersPostConfirm:
-#   handler: bin/users/confirm
-#   events:
-#     - cognitoUserPool:
-#         pool: PalomaUsers
-#         trigger: PostConfirmation
+UsersPostConfirm:
+  handler: build/confirm.handler
+  runtime: python3.8
+  vpc:
+    securityGroupIds:
+      - sg-102ac57f
+    subnetIds:
+      - subnet-49e77422
+      - subnet-48e77423
+      - subnet-4fe77424
+  events:
+    - cognitoUserPool:
+        pool: PalomaUsers
+        trigger: PostConfirmation
 # UsersCreate:
 #   handler: bin/users/create
 #   events:
@@ -62,4 +70,20 @@ Gremlin:
     - http:
         path: gremlin
         method: get
+        cors: true
+    - http:
+        path: gremlin/users/{id}
+        method: get
+        cors: true
+    - http:
+        path: gremlin/users/{id}/pigeons
+        method: get
+        cors: true
+    - http:
+        path: gremlin/users
+        method: post
+        cors: true
+    - http:
+        path: gremlin/users/{id}/pigeons
+        method: post
         cors: true
