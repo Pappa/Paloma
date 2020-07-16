@@ -14,9 +14,12 @@ build:
 		deactivate; \
 	)
 
-	mkdir -p build
-	cp -a ./v-env/lib/python3.8/site-packages/* build/
-	cp -a ./src/functions/* build/
+	( \
+		mkdir -p build; \
+		cp -a ./v-env/lib/python3.8/site-packages/* build/; \
+		cp -a ./src/functions/* build/; \
+		cd build; zip -r9 build.zip . \
+	)
 
 clean:
 	rm -rf ./build

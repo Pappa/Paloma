@@ -43,10 +43,7 @@ provider:
             - Ref: PalomaDBCluster
 
 package:
-  exclude:
-    - ./**
-  include:
-    - ./build/**
+  archive: build/build.zip
 
 functions:
   - ${file(sls/functions/users.yml)}
