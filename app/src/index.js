@@ -7,8 +7,8 @@ import * as serviceWorker from "./serviceWorker";
 import Auth from "@aws-amplify/auth";
 
 Auth.configure({
-  userPoolId: "eu-west-1_NvgQ6gnrO",
-  userPoolWebClientId: "6a9j8velsmp4tc3ael5tgfvf13",
+  userPoolId: "eu-west-1_hOKGydBQa",
+  userPoolWebClientId: "1gghnis2ujn0kio3ihd740grkd",
   region: "eu-west-1",
 });
 

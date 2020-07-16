@@ -46,7 +46,6 @@ package:
   exclude:
     - ./**
   include:
-    - ./*.py
     - ./build/**
 
 functions:
