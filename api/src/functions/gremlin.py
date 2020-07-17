@@ -42,7 +42,6 @@ def handler(event, context):
             ).next()
 
     graph = g.V().values("id", "email", "username").toList()
-    print(graph)
     logging.info(f"graph: {json.dumps(graph, sort_keys=True, indent=4)}")
     response_body = {
         "event": event,
@@ -56,8 +55,4 @@ def handler(event, context):
 
 
 def setup_graph(addr):
-    graph = Graph()
-    logging.info('Trying To Login')
-    g = graph.traversal().withRemote(DriverRemoteConnection(addr, 'g'))
-    logging.info('Successfully Logged In')
-    return g
+    return Graph().traversal().withRemote(DriverRemoteConnection(addr, 'g'))
