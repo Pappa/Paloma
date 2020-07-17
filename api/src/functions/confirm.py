@@ -7,14 +7,13 @@ import json
 from src.functions.lib.paloma_graph import PalomaGraph
 
 
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
+
 def handler(event, context):
     db = os.getenv('NEPTUNE_CLUSTER_ADDRESS')
     logging.info(f"NEPTUNE_CLUSTER_ADDRESS: {db}")
-
-    # event_string = json.dumps(event, sort_keys=True, indent=4)
-    # logging.info(f"event: {event_string}")
-    print(f"NEPTUNE_CLUSTER_ADDRESS: {db}")
-    print(event)
 
     try:
         paloma = PalomaGraph(db)

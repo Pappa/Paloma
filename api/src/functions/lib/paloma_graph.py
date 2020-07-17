@@ -15,28 +15,19 @@ class PalomaGraph:
 
     def __init__(self, addr):
         graph = Graph()
-        print(f"wss://{addr}:8182/gremlin")
         self.g = graph.traversal().withRemote(
             DriverRemoteConnection(f"wss://{addr}:8182/gremlin", "g"))
-        print("done init")
 
     def add_user(self, email: str, username: str):
-        print("add_user")
-        result = self.g.V().hasLabel("user").has("email", email).fold().coalesce(
+        self.g.V().hasLabel("user").has("email", email).fold().coalesce(
             __.unfold(),
             __.addV("user").property(
                 "email", email).property("username", username)
         ).next()
-        print(result)
-        print("done add_user")
 
     def get_user(self, email: str):
-        user = self.g.V().hasLabel("user").has("email", email).values(
+        return self.g.V().hasLabel("user").has("email", email).values(
             "email", "username").limit(1).next()
-        print(user)
-        return user
 
     def get_graph(self):
-        graph = self.graph = self.g.V().values("id", "email", "username").toList()
-        print(graph)
-        return graph
+        return self.g.V().values("id", "email", "username").toList()
