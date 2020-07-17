@@ -14,7 +14,8 @@ import json
 class PalomaGraph:
 
     def __init__(self, addr):
-        self.g = Graph().graph.traversal().withRemote(
+        graph = Graph()
+        self.g = graph.traversal().withRemote(
             DriverRemoteConnection(f"wss://{addr}:8182/gremlin", "g"))
 
     def add_user(self, email: str, username: str):
