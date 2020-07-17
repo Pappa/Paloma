@@ -22,12 +22,17 @@ def handler(event, context):
                 body = json.loads(event["body"])
                 email = body["email"]
                 username = body["username"]
+                sub = body["sub"]
 
-                paloma.add_user(email, username)
+                paloma.add_user(sub, email, username)
 
-                graph = paloma.get_user(email)
+                graph = paloma.get_user_by_email(email)
 
-        logging.info(f"graph: {json.dumps(graph, sort_keys=True, indent=4)}")
+        if (event["httpMethod"] == "GET"):
+            if (event["resource"] == "/graph/users/{id}"):
+                uid = event["pathParameters"]["id"]
+
+                graph = paloma.get_user_by_sub(uid)
 
         response_body = {
             "event": event,

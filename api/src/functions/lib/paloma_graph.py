@@ -18,20 +18,25 @@ class PalomaGraph:
         self.g = graph.traversal().withRemote(
             DriverRemoteConnection(f"wss://{addr}:8182/gremlin", "g"))
 
-    def add_user(self, email: str, username: str):
-        if (email and username):
+    def add_user(self, sub: str, email: str, username: str):
+        if (sub and email and username):
             self.g.V().hasLabel("user").has("email", email).fold().coalesce(
                 __.unfold(),
                 __.addV("user").property(
+                    "sub", sub).property(
                     "email", email).property("username", username)
             ).next()
         else:
             raise Exception(
-                f"Missing user details. Email: {email} Username: {username}")
+                f"Missing user details. sub: {sub} | Email: {email} | Username: {username}")
 
-    def get_user(self, email: str):
+    def get_user_by_sub(self, sub: str):
+        return self.g.V().hasLabel("user").has("sub", sub).values(
+            "sub", "email", "username").toList()
+
+    def get_user_by_email(self, email: str):
         return self.g.V().hasLabel("user").has("email", email).values(
-            "email", "username").limit(1).next()
+            "sub", "email", "username").toList()
 
     def get_graph(self):
-        return self.g.V().values("id", "email", "username").toList()
+        return self.g.V().values("sub", "email", "username").toList()

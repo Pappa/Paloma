@@ -61,3 +61,4 @@ resources:
   - ${file(sls/resources/neptune.yml)}
   - ${file(sls/resources/dynamodb.yml)}
   - ${file(sls/resources/cognito.yml)}
+  - ${file(sls/resources/logs.yml)}

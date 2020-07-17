@@ -6,16 +6,16 @@
   "region": "eu-west-1",
   "request": {
     "userAttributes": {
-      "cognito:email_alias": "test@email.com",
+      "cognito:email_alias": "test2@email.com",
       "cognito:user_status": "CONFIRMED",
-      "email": "test@email.com",
+      "email": "test2@email.com",
       "email_verified": "true",
       "sub": "54445020-3172-4ab5-a6a3-219bc28311ab"
     }
   },
   "response": {},
   "triggerSource": "PostConfirmation_ConfirmSignUp",
-  "userName": "Monkey",
+  "userName": "Monkey2",
   "userPoolId": "eu-west-1_hOKGydBQa",
   "version": "1"
 }

@@ -1,0 +1,7 @@
+{
+  "resource": "/graph/users/{id}",
+  "httpMethod": "GET",
+  "pathParameters": {
+    "id": "54445020-3172-4ab5-a6a3-219bc28311ab"
+  }
+}

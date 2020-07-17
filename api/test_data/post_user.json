@@ -1,5 +1,5 @@
 {
   "resource": "/graph/users",
   "httpMethod": "POST",
-  "body": "{ \"email\": \"test@email.com\", \"username\": \"Monkey\" }"
+  "body": "{ \"email\": \"test2@email.com\", \"username\": \"Monkey2\", \"sub\": \"xxxxx\" }"
 }
