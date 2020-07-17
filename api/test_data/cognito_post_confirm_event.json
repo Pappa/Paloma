@@ -1,0 +1,21 @@
+{
+  "callerContext": {
+    "awsSdkVersion": "aws-sdk-unknown-unknown",
+    "clientId": "1gghnis2ujn0kio3ihd740grkd"
+  },
+  "region": "eu-west-1",
+  "request": {
+    "userAttributes": {
+      "cognito:email_alias": "dr.pappa+test6@gmail.com",
+      "cognito:user_status": "CONFIRMED",
+      "email": "dr.pappa+test6@gmail.com",
+      "email_verified": "true",
+      "sub": "54445020-3172-4ab5-a6a3-219bc28311ab"
+    }
+  },
+  "response": {},
+  "triggerSource": "PostConfirmation_ConfirmSignUp",
+  "userName": "Pappa6",
+  "userPoolId": "eu-west-1_hOKGydBQa",
+  "version": "1"
+}

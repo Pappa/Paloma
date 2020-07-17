@@ -43,7 +43,15 @@ provider:
             - Ref: PalomaDBCluster
 
 package:
-  archive: build/build.zip
+  exclude:
+    - ./**
+  include:
+    - ./src/functions/**
+
+layers:
+  deps:
+    package:
+      artifact: build/deps.zip
 
 functions:
   - ${file(sls/functions/users.yml)}

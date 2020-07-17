@@ -1,0 +1,5 @@
+{
+  "resource": "/gremlin/users",
+  "httpMethod": "POST",
+  "body": "{ \"email\": \"test.email.com\", \"username\": \"Bob\" }"
+}

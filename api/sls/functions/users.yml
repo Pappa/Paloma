@@ -1,6 +1,8 @@
 UsersPostConfirm:
-  handler: build/confirm.handler
+  handler: src/functions/confirm.handler
   runtime: python3.8
+  layers:
+    - { Ref: DepsLambdaLayer }
   vpc:
     securityGroupIds:
       - sg-102ac57f
@@ -57,8 +59,10 @@ UsersPostConfirm:
 #         cors: true
 Gremlin:
   role: VpnAccessRole
-  handler: build/gremlin.handler
+  handler: src/functions/gremlin.handler
   runtime: python3.8
+  layers:
+    - { Ref: DepsLambdaLayer }
   vpc:
     securityGroupIds:
       - sg-102ac57f
