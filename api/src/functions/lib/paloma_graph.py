@@ -19,11 +19,15 @@ class PalomaGraph:
             DriverRemoteConnection(f"wss://{addr}:8182/gremlin", "g"))
 
     def add_user(self, email: str, username: str):
-        self.g.V().hasLabel("user").has("email", email).fold().coalesce(
-            __.unfold(),
-            __.addV("user").property(
-                "email", email).property("username", username)
-        ).next()
+        if (email and username):
+            self.g.V().hasLabel("user").has("email", email).fold().coalesce(
+                __.unfold(),
+                __.addV("user").property(
+                    "email", email).property("username", username)
+            ).next()
+        else:
+            raise Exception(
+                f"Missing user details. Email: {email} Username: {username}")
 
     def get_user(self, email: str):
         return self.g.V().hasLabel("user").has("email", email).values(

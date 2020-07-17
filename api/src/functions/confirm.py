@@ -19,13 +19,10 @@ def handler(event, context):
         paloma = PalomaGraph(db)
         email = event["request"]["userAttributes"]["email"]
         username = event["userName"]
-        if (email and username):
-            paloma.add_user(email, username)
-        else:
-            raise Exception(
-                f"Missing user details. Email: {email} Username: {username}")
+
+        paloma.add_user(email, username)
     except Exception as e:
-        logging.error(str(e))
+        logging.error(e)
         return e
 
     return event

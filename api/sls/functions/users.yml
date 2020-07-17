@@ -57,9 +57,9 @@ UsersPostConfirm:
 #         path: users/graph
 #         method: get
 #         cors: true
-Gremlin:
+Graph:
   role: VpnAccessRole
-  handler: src/functions/gremlin.handler
+  handler: src/functions/graph.handler
   runtime: python3.8
   layers:
     - { Ref: DepsLambdaLayer }
@@ -72,22 +72,22 @@ Gremlin:
       - subnet-4fe77424
   events:
     - http:
-        path: gremlin
+        path: graph
         method: get
         cors: true
     - http:
-        path: gremlin/users/{id}
+        path: graph/users/{id}
         method: get
         cors: true
     - http:
-        path: gremlin/users/{id}/pigeons
+        path: graph/users/{id}/pigeons
         method: get
         cors: true
     - http:
-        path: gremlin/users
+        path: graph/users
         method: post
         cors: true
     - http:
-        path: gremlin/users/{id}/pigeons
+        path: graph/users/{id}/pigeons
         method: post
         cors: true

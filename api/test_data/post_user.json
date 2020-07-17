@@ -1,5 +1,5 @@
 {
-  "resource": "/gremlin/users",
+  "resource": "/graph/users",
   "httpMethod": "POST",
-  "body": "{ \"email\": \"test.email.com\", \"username\": \"Bob\" }"
+  "body": "{ \"email\": \"test@email.com\", \"username\": \"Monkey\" }"
 }
