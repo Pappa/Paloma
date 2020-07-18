@@ -27,6 +27,7 @@ def handler(event, context):
                 paloma.add_user(sub, email, username)
 
                 graph = paloma.get_user_by_email(email)
+                print(graph)
 
         if (event["httpMethod"] == "GET"):
             if (event["resource"] == "/graph/users/{id}"):

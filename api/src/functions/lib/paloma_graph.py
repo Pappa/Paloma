@@ -2,7 +2,7 @@ from gremlin_python import statics
 from gremlin_python.structure.graph import Graph
 from gremlin_python.process.graph_traversal import __
 from gremlin_python.process.strategies import *
-from gremlin_python.process.traversal import T, P, Operator
+from gremlin_python.process.traversal import T, P, Operator, WithOptions
 from gremlin_python.driver.driver_remote_connection import DriverRemoteConnection
 from gremlin_python.driver.tornado.transport import (TornadoTransport)
 import logging
@@ -23,7 +23,7 @@ class PalomaGraph:
             self.g.V().hasLabel("user").has("email", email).fold().coalesce(
                 __.unfold(),
                 __.addV("user").property(
-                    "sub", sub).property(
+                    T.id, sub).property(
                     "email", email).property("username", username)
             ).next()
         else:
@@ -31,12 +31,13 @@ class PalomaGraph:
                 f"Missing user details. sub: {sub} | Email: {email} | Username: {username}")
 
     def get_user_by_sub(self, sub: str):
-        return self.g.V().hasLabel("user").has("sub", sub).values(
-            "sub", "email", "username").toList()
+        return self.g.V().hasLabel("user").has(T.id, sub).limit(1).project("id", "email", "username").by(T.id).by("email").by("username").toList()[0]
 
     def get_user_by_email(self, email: str):
-        return self.g.V().hasLabel("user").has("email", email).values(
-            "sub", "email", "username").toList()
+        return self.g.V().hasLabel("user").has("email", email).limit(1).project("id", "email", "username").by(T.id).by("email").by("username").toList()[0]
 
     def get_graph(self):
-        return self.g.V().values("sub", "email", "username").toList()
+        return self.g.V().valueMap().with_(WithOptions.tokens).toList()
+
+    def drop_graph(self):
+        return self.g.V().drop().iterate()
