@@ -10,6 +10,9 @@ import os
 import sys
 import json
 
+map_user = __.project("id", "label", "email", "username").by(
+    T.id).by(T.label).by("email").by("username")
+
 
 class PalomaGraph:
 
@@ -31,10 +34,10 @@ class PalomaGraph:
                 f"Missing user details. sub: {sub} | Email: {email} | Username: {username}")
 
     def get_user_by_sub(self, sub: str):
-        return self.g.V().hasLabel("user").has(T.id, sub).limit(1).project("id", "label", "email", "username").by(T.id).by(T.label).by("email").by("username").toList()[0]
+        return self.g.V().hasLabel("user").has(T.id, sub).limit(1).flatMap(map_user).toList()[0]
 
     def get_user_by_email(self, email: str):
-        return self.g.V().hasLabel("user").has("email", email).limit(1).project("id", "label", "email", "username").by(T.id).by(T.label).by("email").by("username").toList()[0]
+        return self.g.V().hasLabel("user").has("email", email).limit(1).flatMap(map_user).toList()[0]
 
     def get_graph(self):
         return self.g.V().valueMap().with_(WithOptions.tokens).toList()
