@@ -17,11 +17,11 @@ def handler(event, context):
 
     try:
         paloma = PalomaGraph(db)
-        sub = event["request"]["userAttributes"]["sub"]
+        uid = event["request"]["userAttributes"]["sub"]
         email = event["request"]["userAttributes"]["email"]
         username = event["userName"]
 
-        paloma.add_user(sub, email, username)
+        paloma.add_user(uid, email, username)
     except Exception as e:
         logging.error(e)
         return e

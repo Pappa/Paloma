@@ -21,23 +21,37 @@ class PalomaGraph:
         self.g = graph.traversal().withRemote(
             DriverRemoteConnection(f"wss://{addr}:8182/gremlin", "g"))
 
-    def add_user(self, sub: str, email: str, username: str):
-        if (sub and email and username):
+    def add_user(self, uid: str, email: str, username: str):
+        if (uid and email and username):
             self.g.V().hasLabel("user").has("email", email).fold().coalesce(
                 __.unfold(),
                 __.addV("user").property(
-                    T.id, sub).property(
+                    T.id, uid).property(
                     "email", email).property("username", username)
             ).next()
         else:
             raise Exception(
-                f"Missing user details. sub: {sub} | Email: {email} | Username: {username}")
+                f"Missing user details. uid: {uid} | Email: {email} | Username: {username}")
 
-    def get_user_by_sub(self, sub: str):
-        return self.g.V().hasLabel("user").has(T.id, sub).limit(1).flatMap(map_user).toList()[0]
+    def add_pigeon(self, uid: str, pigeon: dict):
+        if (uid and pigeon and pigeon["ringNo"]):
+            count = self.g.V(uid).as_("user").outE(
+                "owns").has("ringNo", pigeon["ringNo"]).count().next()
+            print(f"count: {count}")
+
+            # coalesce(
+            #     __.unfold(),
+            #     __.addE("owns").to_("user").addV("pigeon").property("ringNo", pigeon["ringNo"])
+            # ).next()
+        else:
+            raise Exception(
+                f"Missing user details. uid: {uid} | Pigeon: {pigeon}")
+
+    def get_user_by_uid(self, uid: str):
+        return self.g.V().hasLabel("user").has(T.id, uid).limit(1).flatMap(map_user).next()
 
     def get_user_by_email(self, email: str):
-        return self.g.V().hasLabel("user").has("email", email).limit(1).flatMap(map_user).toList()[0]
+        return self.g.V().hasLabel("user").has("email", email).limit(1).flatMap(map_user).next()
 
     def get_graph(self):
         return self.g.V().valueMap().with_(WithOptions.tokens).toList()

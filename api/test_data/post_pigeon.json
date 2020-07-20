@@ -1,0 +1,5 @@
+{
+  "resource": "/graph/users/{id}/pigeons",
+  "httpMethod": "POST",
+  "body": "{ \"uid\": \"xxxxx\", \"pigeon\": { \"ringNo\": \"WHU 2020 5564\" } }"
+}

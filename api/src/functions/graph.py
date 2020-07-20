@@ -22,18 +22,27 @@ def handler(event, context):
                 body = json.loads(event["body"])
                 email = body["email"]
                 username = body["username"]
-                sub = body["sub"]
+                uid = body["uid"]
 
-                paloma.add_user(sub, email, username)
+                paloma.add_user(uid, email, username)
 
                 graph = paloma.get_user_by_email(email)
+                print(graph)
+
+        if (event["httpMethod"] == "POST"):
+            if (event["resource"] == "/graph/users/{id}/pigeons"):
+                body = json.loads(event["body"])
+                uid = body["uid"]
+                pigeon = body["pigeon"]
+
+                graph = paloma.add_pigeon(uid, pigeon)
                 print(graph)
 
         if (event["httpMethod"] == "GET"):
             if (event["resource"] == "/graph/users/{id}"):
                 uid = event["pathParameters"]["id"]
 
-                graph = paloma.get_user_by_sub(uid)
+                graph = paloma.get_user_by_uid(uid)
 
         response_body = {
             "event": event,
