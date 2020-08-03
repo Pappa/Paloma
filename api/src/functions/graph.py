@@ -15,7 +15,8 @@ def handler(event, context):
     logging.info(f"NEPTUNE_CLUSTER_ADDRESS: {db}")
 
     try:
-        paloma = PalomaGraph(db)
+        addr = f"wss://{db}:8182/gremlin"
+        paloma = PalomaGraph(addr)
 
         if (event["httpMethod"] == "POST"):
             if (event["resource"] == "/graph/users"):

@@ -13,13 +13,15 @@ import json
 map_user = __.project("id", "label", "email", "username").by(
     T.id).by(T.label).by("email").by("username")
 
+map_pigeon = __.project("ringNo").by("ringNo")
+
 
 class PalomaGraph:
 
     def __init__(self, addr):
         graph = Graph()
         self.g = graph.traversal().withRemote(
-            DriverRemoteConnection(f"wss://{addr}:8182/gremlin", "g"))
+            DriverRemoteConnection(addr, "g"))
 
     def add_user(self, uid: str, email: str, username: str):
         if (uid and email and username):
@@ -35,10 +37,16 @@ class PalomaGraph:
 
     def add_pigeon(self, uid: str, pigeon: dict):
         if (uid and pigeon and pigeon["ringNo"]):
-            count = self.g.V(uid).as_("user").outE(
+            user = self.g.V(uid)
+            count = user.outE(
                 "owns").has("ringNo", pigeon["ringNo"]).count().next()
             print(f"count: {count}")
-
+            if count == 0:
+                pigeon = self.g.V().addV("pigeon").property(
+                    "ringNo", pigeon["ringNo"])
+                self.g.addE('owns').from_(user).to(pigeon)
+                return pigeon.flatMap(map_pigeon).next()
+            return None
             # coalesce(
             #     __.unfold(),
             #     __.addE("owns").to_("user").addV("pigeon").property("ringNo", pigeon["ringNo"])
