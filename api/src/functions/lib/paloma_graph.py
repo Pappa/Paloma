@@ -13,7 +13,7 @@ import json
 map_user = __.project("id", "label", "email", "username").by(
     T.id).by(T.label).by("email").by("username")
 
-map_pigeon = __.project("ringNo").by("ringNo")
+map_pigeon = __.project("id", "ringNo").by(T.id).by("ringNo")
 
 
 class PalomaGraph:
@@ -56,7 +56,10 @@ class PalomaGraph:
                 f"Missing user details. uid: {uid} | Pigeon: {pigeon}")
 
     def get_user_by_uid(self, uid: str):
-        return self.g.V().hasLabel("user").has(T.id, uid).limit(1).flatMap(map_user).next()
+        return self.g.V(uid).limit(1).flatMap(map_user).next()
+
+    def get_pigeons_by_uid(self, uid: str):
+        return self.g.V(uid).out("owns").flatMap(map_pigeon).next()
 
     def get_user_by_email(self, email: str):
         return self.g.V().hasLabel("user").has("email", email).limit(1).flatMap(map_user).next()

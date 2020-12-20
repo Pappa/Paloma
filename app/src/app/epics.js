@@ -1,2 +1,2 @@
-export * from "../features/counter/counterEpics";
 export * from "../features/auth/authEpics";
+export * from "../features/loft/loftEpics";

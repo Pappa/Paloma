@@ -5,6 +5,7 @@ import { initStore } from "./app/store";
 import { Provider } from "react-redux";
 import * as serviceWorker from "./serviceWorker";
 import Auth from "@aws-amplify/auth";
+import config from "./app/config"
 
 Auth.configure({
   userPoolId: "eu-west-1_hOKGydBQa",
@@ -12,7 +13,7 @@ Auth.configure({
   region: "eu-west-1",
 });
 
-const store = initStore();
+const store = initStore({ config });
 
 ReactDOM.render(
   <React.StrictMode>

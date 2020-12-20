@@ -14,6 +14,9 @@ def handler(event, context):
     db = os.getenv('NEPTUNE_CLUSTER_ADDRESS')
     logging.info(f"NEPTUNE_CLUSTER_ADDRESS: {db}")
 
+    logging.info(f"httpMethod: {event['httpMethod']}")
+    logging.info(f"resource: {event['resource']}")
+
     try:
         addr = f"wss://{db}:8182/gremlin"
         paloma = PalomaGraph(addr)
@@ -44,6 +47,12 @@ def handler(event, context):
                 uid = event["pathParameters"]["id"]
 
                 graph = paloma.get_user_by_uid(uid)
+
+        if (event["httpMethod"] == "GET"):
+            if (event["resource"] == "/graph/users/{id}/pigeons"):
+                uid = event["pathParameters"]["id"]
+
+                graph = paloma.get_pigeons_by_uid(uid)
 
         response_body = {
             "event": event,
