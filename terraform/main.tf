@@ -7,8 +7,8 @@ terraform {
     }
 
     backend "s3" {
-        bucket = "paloma-terraform-backend"
-        key    = ""
+        bucket = "dung-beetle-bash-terraform-backend"
+        key    = "paloma"
         region = "eu-west-1"
     }
     
