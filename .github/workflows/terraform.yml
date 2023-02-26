@@ -19,7 +19,7 @@
 #       with:
 #         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
-name: 'Terraform'
+name: Terraform
 
 on:
   push:
@@ -35,14 +35,12 @@ env:
 
 jobs:
   deploy:
-    name: 'Terraform'
+    name: Terraform
     runs-on: ubuntu-latest
     environment: production
 
-    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
       run:
-        shell: bash
         working-directory: terraform
 
     steps:
@@ -51,16 +49,16 @@ jobs:
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
 
-    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init
       run: terraform init
 
-    # Checks that all Terraform configuration files adhere to a canonical format
     - name: Terraform Format
       run: terraform fmt -check
       continue-on-error: true
 
-    # Generates an execution plan for Terraform
+    - name: Terraform Validate
+      run: terraform validate -backend=false
+
     - name: Terraform Plan
       run: terraform plan -input=false
 
