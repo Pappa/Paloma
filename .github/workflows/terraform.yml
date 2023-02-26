@@ -57,7 +57,7 @@ jobs:
       continue-on-error: true
 
     - name: Terraform Validate
-      run: terraform validate -backend=false
+      run: terraform validate -no-color
 
     - name: Terraform Plan
       run: terraform plan -input=false
