@@ -1,7 +1,0 @@
-{
-  "resource": "/graph/users/{id}",
-  "httpMethod": "GET",
-  "pathParameters": {
-    "id": "xxxxx"
-  }
-}

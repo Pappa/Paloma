@@ -1,7 +1,0 @@
-Resources:
-  GraphLogGroup:
-    Properties:
-      RetentionInDays: 7
-  UsersPostConfirmLogGroup:
-    Properties:
-      RetentionInDays: 7
