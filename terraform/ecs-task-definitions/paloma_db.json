@@ -1,0 +1,15 @@
+[
+    {
+        "image": "docker.io/orientdb:latest",
+        "cpu": 1024,
+        "memory": 2048,
+        "name": "paloma",
+        "networkMode": "awsvpc",
+        "portMappings": [
+            {
+                "containerPort": 3000,
+                "hostPort": 3000
+            }
+        ]
+    }
+]
