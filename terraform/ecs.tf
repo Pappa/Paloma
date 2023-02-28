@@ -23,6 +23,11 @@ resource "aws_ecs_service" "paloma" {
   launch_type                        = "FARGATE"
   scheduling_strategy                = "REPLICA"
 
+  depends_on = [
+    aws_iam_role.ecs_task_execution,
+    aws_iam_role.ecs_task
+  ]
+
   network_configuration {
     security_groups  = [aws_security_group.paloma.id]
     subnets          = [aws_subnet.public.id]
