@@ -7,6 +7,14 @@
         "networkMode": "awsvpc",
         "portMappings": [
             {
+                "containerPort": 2424,
+                "hostPort": 2424
+            },
+            {
+                "containerPort": 2480,
+                "hostPort": 3000
+            },
+            {
                 "containerPort": 3000,
                 "hostPort": 3000
             }
