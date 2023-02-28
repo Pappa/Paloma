@@ -14,14 +14,14 @@ resource "aws_ecs_task_definition" "paloma" {
 }
 
 resource "aws_ecs_service" "paloma" {
-  name                               = "paloma"
-  cluster                            = aws_ecs_cluster.paloma.id
-  task_definition                    = aws_ecs_task_definition.paloma.arn
-  desired_count                      = 0
-#   deployment_minimum_healthy_percent = 100
-#   deployment_maximum_percent         = 200
-  launch_type                        = "FARGATE"
-  scheduling_strategy                = "REPLICA"
+  name            = "paloma"
+  cluster         = aws_ecs_cluster.paloma.id
+  task_definition = aws_ecs_task_definition.paloma.arn
+  desired_count   = 0
+  #   deployment_minimum_healthy_percent = 100
+  #   deployment_maximum_percent         = 200
+  launch_type         = "FARGATE"
+  scheduling_strategy = "REPLICA"
 
   depends_on = [
     aws_iam_role.ecs_task_execution,

@@ -8,12 +8,18 @@ data "aws_availability_zones" "available_zones" {
   state = "available"
 }
 
-resource "aws_internet_gateway" "gw" {
+resource "aws_internet_gateway" "paloma" {
   vpc_id = aws_vpc.paloma.id
 
   tags = {
     Name = "paloma"
   }
+}
+
+resource "aws_route" "internet_access" {
+  route_table_id         = aws_vpc.paloma.main_route_table_id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.paloma.id
 }
 
 resource "aws_security_group" "paloma" {
@@ -51,14 +57,4 @@ resource "aws_subnet" "public" {
   cidr_block              = cidrsubnet(aws_vpc.paloma.cidr_block, 8, 2)
   availability_zone       = data.aws_availability_zones.available_zones.names[0]
   map_public_ip_on_launch = true
-}
-
-resource "aws_internet_gateway" "gateway" {
-  vpc_id = aws_vpc.paloma.id
-}
-
-resource "aws_route" "internet_access" {
-  route_table_id         = aws_vpc.paloma.main_route_table_id
-  destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = aws_internet_gateway.gateway.id
 }
