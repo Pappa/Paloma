@@ -1,9 +1,9 @@
-resource "aws_ecs_cluster" "cluster" {
+resource "aws_ecs_cluster" "paloma" {
   name = "paloma"
 }
 
-resource "aws_ecs_task_definition" "paloma_db" {
-  family                   = "paloma_db"
+resource "aws_ecs_task_definition" "paloma" {
+  family                   = "paloma"
   network_mode             = "awsvpc"
   task_role_arn            = aws_iam_role.ecs_task.arn
   execution_role_arn       = aws_iam_role.ecs_task_execution.arn
@@ -11,4 +11,30 @@ resource "aws_ecs_task_definition" "paloma_db" {
   cpu                      = 1024
   memory                   = 2048
   container_definitions    = file("ecs-task-definitions/paloma_db.json")
+}
+
+resource "aws_ecs_service" "paloma" {
+ name                               = "paloma"
+ cluster                            = aws_ecs_cluster.paloma.id
+ task_definition                    = aws_ecs_task_definition.paloma.arn
+ desired_count                      = 1
+ deployment_minimum_healthy_percent = 100
+ deployment_maximum_percent         = 100
+ launch_type                        = "FARGATE"
+ scheduling_strategy                = "REPLICA"
+ 
+ network_configuration {
+   security_groups  = [aws_security_group.id]
+   assign_public_ip = true
+ }
+ 
+#  load_balancer {
+#    target_group_arn = var.aws_alb_target_group_arn
+#    container_name   = "paloma"
+#    container_port   = var.container_port
+#  }
+ 
+ lifecycle {
+   ignore_changes = [task_definition, desired_count]
+ }
 }
