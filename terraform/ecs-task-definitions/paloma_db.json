@@ -1,6 +1,6 @@
 [
     {
-        "image": "docker.io/orientdb:latest",
+        "image": "public.ecr.aws/docker/library/orientdb:latest",
         "cpu": 1024,
         "memory": 2048,
         "name": "paloma",
