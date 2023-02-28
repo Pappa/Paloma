@@ -12,7 +12,7 @@
             },
             {
                 "containerPort": 2480,
-                "hostPort": 3000
+                "hostPort": 2480
             },
             {
                 "containerPort": 3000,
