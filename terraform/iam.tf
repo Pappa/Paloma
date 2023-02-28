@@ -1,10 +1,10 @@
 resource "aws_iam_role" "ecs_task_execution" {
-  name               = "paloma_db"
+  name               = "paloma_db_ecs_task_execution"
   assume_role_policy = file("policies/assume-role/ecs_task_execution.json")
 }
 
 resource "aws_iam_role" "ecs_task" {
-  name               = "paloma_db"
+  name               = "paloma_db_ecs_task"
   assume_role_policy = file("policies/assume-role/ecs_task.json")
 }
 
