@@ -5,25 +5,25 @@ resource "aws_vpc" "paloma" {
 }
 
 resource "aws_security_group" "paloma" {
-  name        = "paloma"
-  vpc_id      = aws_vpc.paloma.id
+  name   = "paloma"
+  vpc_id = aws_vpc.paloma.id
 
   ingress {
-    protocol        = "tcp"
-    from_port       = 2424
-    to_port         = 2424
+    protocol  = "tcp"
+    from_port = 2424
+    to_port   = 2424
   }
 
   ingress {
-    protocol        = "tcp"
-    from_port       = 2480
-    to_port         = 2480
+    protocol  = "tcp"
+    from_port = 2480
+    to_port   = 2480
   }
 
   ingress {
-    protocol        = "tcp"
-    from_port       = 3000
-    to_port         = 3000
+    protocol  = "tcp"
+    from_port = 3000
+    to_port   = 3000
   }
 
   egress {

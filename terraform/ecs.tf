@@ -14,27 +14,27 @@ resource "aws_ecs_task_definition" "paloma" {
 }
 
 resource "aws_ecs_service" "paloma" {
- name                               = "paloma"
- cluster                            = aws_ecs_cluster.paloma.id
- task_definition                    = aws_ecs_task_definition.paloma.arn
- desired_count                      = 1
- deployment_minimum_healthy_percent = 100
- deployment_maximum_percent         = 100
- launch_type                        = "FARGATE"
- scheduling_strategy                = "REPLICA"
- 
- network_configuration {
-   security_groups  = [aws_security_group.id]
-   assign_public_ip = true
- }
- 
-#  load_balancer {
-#    target_group_arn = var.aws_alb_target_group_arn
-#    container_name   = "paloma"
-#    container_port   = var.container_port
-#  }
- 
- lifecycle {
-   ignore_changes = [task_definition, desired_count]
- }
+  name                               = "paloma"
+  cluster                            = aws_ecs_cluster.paloma.id
+  task_definition                    = aws_ecs_task_definition.paloma.arn
+  desired_count                      = 1
+  deployment_minimum_healthy_percent = 100
+  deployment_maximum_percent         = 100
+  launch_type                        = "FARGATE"
+  scheduling_strategy                = "REPLICA"
+
+  network_configuration {
+    security_groups  = [aws_security_group.id]
+    assign_public_ip = true
+  }
+
+  #  load_balancer {
+  #    target_group_arn = var.aws_alb_target_group_arn
+  #    container_name   = "paloma"
+  #    container_port   = var.container_port
+  #  }
+
+  lifecycle {
+    ignore_changes = [task_definition, desired_count]
+  }
 }
