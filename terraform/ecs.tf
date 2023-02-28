@@ -24,7 +24,7 @@ resource "aws_ecs_service" "paloma" {
   scheduling_strategy                = "REPLICA"
 
   network_configuration {
-    security_groups  = [aws_security_group.id]
+    security_groups  = [aws_security_group.paloma.id]
     assign_public_ip = true
   }
 
