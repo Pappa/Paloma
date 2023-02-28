@@ -18,6 +18,15 @@
                 "containerPort": 3000,
                 "hostPort": 3000
             }
-        ]
+        ],
+        "logConfiguration": {
+            "logDriver": "awslogs",
+            "options": {
+                "awslogs-create-group": "true",
+                "awslogs-group": "paloma",
+                "awslogs-region": "eu-west-1",
+                "awslogs-stream-prefix": "paloma-"
+            }
+        }
     }
 ]
