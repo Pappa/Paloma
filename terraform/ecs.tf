@@ -10,7 +10,11 @@ resource "aws_ecs_task_definition" "paloma" {
   requires_compatibilities = ["FARGATE"]
   cpu                      = 1024
   memory                   = 2048
-  container_definitions    = file("ecs-task-definitions/paloma_db.json")
+  container_definitions = templatefile("ecs-task-definitions/paloma_db.json", {
+    aws_region = var.aws_region
+    log_group  = aws_cloudwatch_log_group.paloma.name
+    prefix     = "paloma-"
+  })
 }
 
 resource "aws_ecs_service" "paloma" {
@@ -43,4 +47,8 @@ resource "aws_ecs_service" "paloma" {
   lifecycle {
     ignore_changes = [task_definition]
   }
+}
+
+resource "aws_cloudwatch_log_group" "paloma" {
+  name = "paloma"
 }

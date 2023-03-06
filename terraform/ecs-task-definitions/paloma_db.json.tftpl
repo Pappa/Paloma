@@ -22,10 +22,9 @@
         "logConfiguration": {
             "logDriver": "awslogs",
             "options": {
-                "awslogs-create-group": "true",
-                "awslogs-group": "paloma",
-                "awslogs-region": "eu-west-1",
-                "awslogs-stream-prefix": "paloma-"
+                "awslogs-group": "${log_group}",
+                "awslogs-region": "${aws_region}",
+                "awslogs-stream-prefix": "${prefix}"
             }
         }
     }

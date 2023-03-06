@@ -17,6 +17,6 @@ resource "aws_iam_role" "ecs_task" {
 }
 
 resource "aws_iam_policy" "ecs_logs" {
-    name = "paloma-ecs-logs"
-    policy = file("policies/ecs_logs.json")
+  name   = "paloma-ecs-logs"
+  policy = file("policies/ecs_logs.json")
 }
