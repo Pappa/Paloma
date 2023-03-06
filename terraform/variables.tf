@@ -3,5 +3,5 @@ variable "aws_region" {
 }
 
 variable "ORIENTDB_ROOT_PASSWORD" {
-    type = string
+  type = string
 }

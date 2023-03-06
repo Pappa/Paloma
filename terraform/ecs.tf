@@ -15,7 +15,7 @@ resource "aws_ecs_task_definition" "paloma" {
     log_group  = aws_cloudwatch_log_group.paloma.name
     prefix     = "paloma-"
     env_vars = jsonencode({
-        "ORIENTDB_ROOT_PASSWORD" = "${var.ORIENTDB_ROOT_PASSWORD}"
+      "ORIENTDB_ROOT_PASSWORD" = "${var.ORIENTDB_ROOT_PASSWORD}"
     })
   })
 }
