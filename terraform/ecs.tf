@@ -14,6 +14,9 @@ resource "aws_ecs_task_definition" "paloma" {
     aws_region = var.aws_region
     log_group  = aws_cloudwatch_log_group.paloma.name
     prefix     = "paloma-"
+    env_vars = jsonencode({
+        ORIENTDB_ROOT_PASSWORD = var.ORIENTDB_ROOT_PASSWORD
+    })
   })
 }
 
@@ -44,9 +47,9 @@ resource "aws_ecs_service" "paloma" {
   #    container_port   = var.container_port
   #  }
 
-#   lifecycle {
-#     ignore_changes = [task_definition]
-#   }
+  #   lifecycle {
+  #     ignore_changes = [task_definition]
+  #   }
 }
 
 resource "aws_cloudwatch_log_group" "paloma" {
