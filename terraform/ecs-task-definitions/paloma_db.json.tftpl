@@ -22,11 +22,11 @@
         "logConfiguration": {
             "logDriver": "awslogs",
             "options": {
-                "awslogs-group": "${log_group}",
-                "awslogs-region": "${aws_region}",
-                "awslogs-stream-prefix": "${prefix}"
+                "awslogs-group": ${log_group},
+                "awslogs-region": ${aws_region},
+                "awslogs-stream-prefix": ${prefix}
             }
         },
-        "environment": "${env_vars}"
+        "environment": ${env_vars}
     }
 ]
