@@ -44,9 +44,9 @@ resource "aws_ecs_service" "paloma" {
   #    container_port   = var.container_port
   #  }
 
-  lifecycle {
-    ignore_changes = [task_definition]
-  }
+#   lifecycle {
+#     ignore_changes = [task_definition]
+#   }
 }
 
 resource "aws_cloudwatch_log_group" "paloma" {
