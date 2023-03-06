@@ -10,7 +10,7 @@ resource "aws_ecs_task_definition" "paloma" {
   requires_compatibilities = ["FARGATE"]
   cpu                      = 1024
   memory                   = 2048
-  container_definitions = templatefile("ecs-task-definitions/paloma_db.json", {
+  container_definitions = templatefile("ecs-task-definitions/paloma_db.json.tftpl", {
     aws_region = var.aws_region
     log_group  = aws_cloudwatch_log_group.paloma.name
     prefix     = "paloma-"
