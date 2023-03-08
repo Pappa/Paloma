@@ -29,28 +29,6 @@
         },
         "environment": [
             { "name": "ORIENTDB_ROOT_PASSWORD", "value": "${ORIENTDB_ROOT_PASSWORD}" }
-        ],
-        "command": [,
-            "/bin/bash -c \"cd $ORIENTDB_HOME/bin\"",
-            "/bin/bash -c \"./server.sh\""
-        ],
-        "mountPoints": [
-            { 
-                "containerPath": "/orientdb/config",
-                "sourceVolume": "./config"
-            },
-            { 
-                "containerPath": "/orientdb/databases",
-                "sourceVolume": "./databases"
-            },
-            { 
-                "containerPath": "/orientdb/backup",
-                "sourceVolume": "./backup"
-            },
-            { 
-                "containerPath": "/orientdb/db",
-                "sourceVolume": "./db"
-            }
         ]
     }
 ]
