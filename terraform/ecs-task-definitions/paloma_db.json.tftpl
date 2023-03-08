@@ -27,6 +27,8 @@
                 "awslogs-stream-prefix": "${prefix}"
             }
         },
-        "environment": "${env_vars}"
+        "environment": jsonencode({
+      "ORIENTDB_ROOT_PASSWORD" = "${ORIENTDB_ROOT_PASSWORD}"
+    })
     }
 ]
