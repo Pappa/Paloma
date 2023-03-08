@@ -33,15 +33,9 @@ resource "aws_security_group" "paloma" {
   }
 
   ingress {
-    protocol  = "tcp"
+    protocol  = "http"
     from_port = 2480
     to_port   = 2480
-  }
-
-  ingress {
-    protocol  = "tcp"
-    from_port = 3000
-    to_port   = 3000
   }
 
   egress {
