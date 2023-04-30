@@ -46,9 +46,16 @@ resource "aws_security_group" "paloma" {
   }
 }
 
-resource "aws_subnet" "public" {
+resource "aws_subnet" "paloma_public" {
   vpc_id                  = aws_vpc.paloma.id
-  cidr_block              = cidrsubnet(aws_vpc.paloma.cidr_block, 8, 2)
+  cidr_block              = "10.0.0.0/24"
   availability_zone       = data.aws_availability_zones.available_zones.names[0]
   map_public_ip_on_launch = true
+}
+
+resource "aws_subnet" "paloma_private" {
+  vpc_id                  = aws_vpc.paloma.id
+  cidr_block              = "10.0.1.0/24"
+  availability_zone       = data.aws_availability_zones.available_zones.names[0]
+  map_public_ip_on_launch = false
 }

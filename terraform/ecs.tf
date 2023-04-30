@@ -7,13 +7,13 @@ resource "aws_ecs_task_definition" "paloma" {
   network_mode             = "awsvpc"
   task_role_arn            = aws_iam_role.ecs_task.arn
   execution_role_arn       = aws_iam_role.ecs_task_execution.arn
-  requires_compatibilities = ["FARGATE"]
+  requires_compatibilities = ["EC2"]
   cpu                      = 1024
   memory                   = 2048
   container_definitions = templatefile("ecs-task-definitions/paloma_db.json.tftpl", {
-    aws_region = var.aws_region
-    log_group  = aws_cloudwatch_log_group.paloma.name
-    prefix     = "paloma-"
+    aws_region             = var.aws_region
+    log_group              = aws_cloudwatch_log_group.paloma.name
+    prefix                 = "paloma-"
     ORIENTDB_ROOT_PASSWORD = var.ORIENTDB_ROOT_PASSWORD
   })
 }
@@ -25,7 +25,7 @@ resource "aws_ecs_service" "paloma" {
   desired_count   = 1
   #   deployment_minimum_healthy_percent = 100
   #   deployment_maximum_percent         = 200
-  launch_type         = "FARGATE"
+  launch_type         = "EC2"
   scheduling_strategy = "REPLICA"
 
   depends_on = [
@@ -35,7 +35,7 @@ resource "aws_ecs_service" "paloma" {
 
   network_configuration {
     security_groups  = [aws_security_group.paloma.id]
-    subnets          = [aws_subnet.public.id]
+    subnets          = [aws_subnet.paloma_public.id]
     assign_public_ip = true
   }
 
