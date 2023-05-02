@@ -44,8 +44,7 @@ resource "aws_instance" "graph" {
   ami           = data.aws_ami.aws_optimized_ecs.id
   instance_type = "t3.micro"
   iam_instance_profile = {
-    name = aws_iam_role.ecs_instance_role.name
-    arn  = aws_iam_role.ecs_instance_role.arn
+    arn = aws_iam_instance_profile.ecs_instance_profile.arn
   }
   user_data = <<EOF
 #!/bin/bash
