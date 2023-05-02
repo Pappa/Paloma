@@ -9,7 +9,7 @@ resource "aws_ecs_task_definition" "paloma" {
   execution_role_arn       = aws_iam_role.ecs_task_execution.arn
   requires_compatibilities = ["EC2"]
   cpu                      = 1024
-  memory                   = 2048
+  memory                   = 512
   container_definitions = templatefile("ecs-task-definitions/paloma_db.json.tftpl", {
     aws_region             = var.aws_region
     log_group              = aws_cloudwatch_log_group.paloma_ecs_task.name
