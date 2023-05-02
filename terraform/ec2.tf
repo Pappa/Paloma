@@ -41,10 +41,13 @@ data "aws_ami" "aws_optimized_ecs" {
 }
 
 resource "aws_instance" "graph" {
-  ami                  = data.aws_ami.aws_optimized_ecs.id
-  instance_type        = "t3.micro"
-  iam_instance_profile = aws_iam_role.ecs_instance_role.name
-  user_data            = <<EOF
+  ami           = data.aws_ami.aws_optimized_ecs.id
+  instance_type = "t3.micro"
+  iam_instance_profile = {
+    name = aws_iam_role.ecs_instance_role.name
+    arn  = aws_iam_role.ecs_instance_role.arn
+  }
+  user_data = <<EOF
 #!/bin/bash
 echo "ECS_CLUSTER=${aws_ecs_cluster.paloma.name}" >> /etc/ecs/ecs.config
 EOF
