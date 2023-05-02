@@ -15,6 +15,7 @@ resource "aws_ecs_task_definition" "paloma" {
     log_group              = aws_cloudwatch_log_group.paloma.name
     prefix                 = "paloma-"
     ORIENTDB_ROOT_PASSWORD = var.ORIENTDB_ROOT_PASSWORD
+    ORIENTDB_OPTS_MEMORY   = "-Xmx512m"
   })
 }
 
