@@ -12,7 +12,7 @@ resource "aws_ecs_task_definition" "paloma" {
   memory                   = 2048
   container_definitions = templatefile("ecs-task-definitions/paloma_db.json.tftpl", {
     aws_region             = var.aws_region
-    log_group              = aws_cloudwatch_log_group.paloma.name
+    log_group              = aws_cloudwatch_log_group.paloma_ecs_task.name
     prefix                 = "paloma-"
     ORIENTDB_ROOT_PASSWORD = var.ORIENTDB_ROOT_PASSWORD
     ORIENTDB_OPTS_MEMORY   = "-Xmx512m"
@@ -50,6 +50,6 @@ resource "aws_ecs_service" "paloma" {
   #   }
 }
 
-resource "aws_cloudwatch_log_group" "paloma" {
+resource "aws_cloudwatch_log_group" "paloma_ecs_task" {
   name = "paloma"
 }
