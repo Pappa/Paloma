@@ -180,3 +180,13 @@ resource "aws_security_group" "paloma" {
   #     cidr_blocks = ["0.0.0.0/0"]
   #   }
 }
+
+resource "aws_network_interface" "paloma" {
+  subnet_id       = aws_subnet.paloma_public_subnet_1.id
+  security_groups = [aws_security_group.paloma.id]
+
+  attachment {
+    instance     = aws_instance.graph.id
+    device_index = 1
+  }
+}
