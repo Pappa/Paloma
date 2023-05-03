@@ -101,7 +101,7 @@ resource "aws_route_table" "paloma_private_subnet_1" {
   vpc_id = aws_vpc.paloma.id
 
   route {
-    cidr_block = var.monitoring_db_transit_gateway_cidr
+    cidr_block = local.private_subnet_az1_cidr
   }
 
   tags = {
@@ -113,7 +113,7 @@ resource "aws_route_table" "paloma_private_subnet_2" {
   vpc_id = aws_vpc.paloma.id
 
   route {
-    cidr_block = var.monitoring_db_transit_gateway_cidr
+    cidr_block = local.private_subnet_az2_cidr
   }
 
   tags = {
