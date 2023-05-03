@@ -1,61 +1,190 @@
-
-resource "aws_vpc" "paloma" {
-  cidr_block           = "10.0.0.0/16"
-  enable_dns_hostnames = true
+locals {
+  private_subnet_1   = "Paloma - Private Subnet 1"
+  private_subnet_2   = "Paloma - Private Subnet 2"
+  public_subnet_1    = "Paloma - Public Subnet 1"
+  public_subnet_2    = "Paloma - Public Subnet 2"
+  az_a               = "${var.aws_region}a"
+  az_b               = "${var.aws_region}b"
+  az_c               = "${var.aws_region}c"
+  vpc_name           = "Paloma VPC"
+  vpc_cidr           = "10.0.0.0/16"
+  public_subnet_az1  = "10.0.1.0/27"
+  public_subnet_az2  = "10.0.1.32/27"
+  private_subnet_az1 = "10.0.2.0/27"
+  private_subnet_az2 = "10.0.2.32/27"
 }
 
-data "aws_availability_zones" "available_zones" {
-  state = "available"
+resource "aws_vpc" "paloma" {
+  cidr_block           = local.vpc_cidr
+  instance_tenancy     = "default"
+  enable_dns_hostnames = true
+
+  tags = {
+    Name = local.vpc_name
+  }
+
 }
 
 resource "aws_internet_gateway" "paloma" {
   vpc_id = aws_vpc.paloma.id
 
   tags = {
-    Name = "paloma"
+    Name = "${local.vpc_name} Internet Gateway"
   }
 }
 
-resource "aws_route" "internet_access" {
-  route_table_id         = aws_vpc.paloma.main_route_table_id
-  destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = aws_internet_gateway.paloma.id
+resource "aws_subnet" "paloma_public_subnet_1" {
+  vpc_id            = aws_vpc.paloma.id
+  availability_zone = local.az_a
+  cidr_block        = var.public_subnet_az1
+
+  tags = {
+    Name = local.public_subnet_1
+  }
 }
 
+resource "aws_subnet" "paloma_public_subnet_2" {
+  vpc_id            = aws_vpc.paloma.id
+  availability_zone = local.az_b
+  cidr_block        = var.public_subnet_az2
+
+  tags = {
+    Name = local.public_subnet_2
+  }
+}
+
+resource "aws_subnet" "paloma_private_subnet_1" {
+  vpc_id            = aws_vpc.paloma.id
+  availability_zone = local.az_a
+  cidr_block        = var.private_subnet_az1
+
+  tags = {
+    Name = local.private_subnet_1
+  }
+}
+
+resource "aws_subnet" "paloma_private_subnet_2" {
+  vpc_id            = aws_vpc.paloma.id
+  availability_zone = local.az_b
+  cidr_block        = var.private_subnet_az2
+
+  tags = {
+    Name = local.private_subnet_2
+  }
+}
+
+resource "aws_route_table" "paloma_public_subnet_1" {
+  vpc_id = aws_vpc.paloma.id
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.paloma.id
+  }
+
+  tags = {
+    Name = "${local.public_subnet_1}_route_table"
+  }
+}
+
+resource "aws_route_table" "paloma_public_subnet_2" {
+  vpc_id = aws_vpc.paloma.id
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.paloma.id
+  }
+
+  tags = {
+    Name = "${local.public_subnet_2}_route_table"
+  }
+}
+
+resource "aws_route_table" "paloma_private_subnet_1" {
+  vpc_id = aws_vpc.paloma.id
+
+  route {
+    cidr_block = var.monitoring_db_transit_gateway_cidr
+  }
+
+  tags = {
+    Name = "${local.private_subnet_1}_route_table"
+  }
+}
+
+resource "aws_route_table" "paloma_private_subnet_2" {
+  vpc_id = aws_vpc.paloma.id
+
+  route {
+    cidr_block = var.monitoring_db_transit_gateway_cidr
+  }
+
+  tags = {
+    Name = "${local.private_subnet_2}_route_table"
+  }
+}
+
+resource "aws_route_table_association" "public_subnet_1_route_association" {
+  subnet_id      = aws_subnet.paloma_public_subnet_1.id
+  route_table_id = aws_route_table.paloma_public_subnet_1.id
+}
+
+
+resource "aws_route_table_association" "public_subnet_2_route_association" {
+  subnet_id      = aws_subnet.paloma_public_subnet_2.id
+  route_table_id = aws_route_table.paloma_public_subnet_2.id
+}
+
+
+resource "aws_route_table_association" "private_subnet_1_route_association" {
+  subnet_id      = aws_subnet.paloma_private_subnet_1.id
+  route_table_id = aws_route_table.paloma_private_subnet_1.id
+}
+
+
+resource "aws_route_table_association" "private_subnet_2_route_association" {
+  subnet_id      = aws_subnet.paloma_private_subnet_2.id
+  route_table_id = aws_route_table.paloma_private_subnet_2.id
+}
+
+
+
 resource "aws_security_group" "paloma" {
-  name   = "paloma"
+  name   = "paloma_security_group"
   vpc_id = aws_vpc.paloma.id
 
   ingress {
-    protocol  = "tcp"
-    from_port = 2424
-    to_port   = 2424
-  }
-
-  ingress {
-    protocol  = "http"
-    from_port = 2480
-    to_port   = 2480
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
+    cidr_blocks = [
+      var.private_subnet_az1,
+      var.private_subnet_az2
+    ]
+    self = true
   }
 
   egress {
-    protocol    = "-1"
     from_port   = 0
     to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
+    self        = true
   }
-}
 
-resource "aws_subnet" "paloma_public" {
-  vpc_id                  = aws_vpc.paloma.id
-  cidr_block              = "10.0.0.0/24"
-  availability_zone       = data.aws_availability_zones.available_zones.names[0]
-  map_public_ip_on_launch = true
-}
+  #   ingress {
+  #     protocol  = "tcp"
+  #     from_port = 2424
+  #     to_port   = 2424
+  #   }
 
-resource "aws_subnet" "paloma_private" {
-  vpc_id                  = aws_vpc.paloma.id
-  cidr_block              = "10.0.1.0/24"
-  availability_zone       = data.aws_availability_zones.available_zones.names[0]
-  map_public_ip_on_launch = false
+  #   ingress {
+  #     protocol  = "http"
+  #     from_port = 2480
+  #     to_port   = 2480
+  #   }
+
+  #   egress {
+  #     protocol    = "-1"
+  #     from_port   = 0
+  #     to_port     = 0
+  #     cidr_blocks = ["0.0.0.0/0"]
+  #   }
 }
