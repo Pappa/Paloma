@@ -37,7 +37,7 @@ resource "aws_ecs_service" "paloma" {
   network_configuration {
     security_groups = [aws_security_group.paloma.id]
     subnets = [
-      aws_subnet.paloma_public.id,
+      aws_subnet.paloma_public_subnet_1.id,
       aws_subnet.paloma_public_subnet_2.id
     ]
   }
