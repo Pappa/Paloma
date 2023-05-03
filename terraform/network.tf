@@ -131,6 +131,18 @@ resource "aws_security_group" "paloma" {
   vpc_id      = aws_vpc.paloma.id
 
   ingress {
+    protocol  = "tcp"
+    from_port = 2424
+    to_port   = 2424
+  }
+
+  ingress {
+    protocol  = "http"
+    from_port = 2480
+    to_port   = 2480
+  }
+
+  ingress {
     from_port = 0
     to_port   = 0
     protocol  = "-1"
