@@ -1,8 +1,8 @@
 locals {
-  private_subnet_1        = "Paloma - Private Subnet 1"
-  private_subnet_2        = "Paloma - Private Subnet 2"
   public_subnet_1         = "Paloma - Public Subnet 1"
   public_subnet_2         = "Paloma - Public Subnet 2"
+  private_subnet_1        = "Paloma - Private Subnet 1"
+  private_subnet_2        = "Paloma - Private Subnet 2"
   az_a                    = "${var.aws_region}a"
   az_b                    = "${var.aws_region}b"
   az_c                    = "${var.aws_region}c"
@@ -73,7 +73,7 @@ resource "aws_subnet" "paloma_private_subnet_2" {
   }
 }
 
-resource "aws_route_table" "paloma_public_subnet_1" {
+resource "aws_route_table" "paloma_public" {
   vpc_id = aws_vpc.paloma.id
   route {
     cidr_block = "0.0.0.0/0"
@@ -81,31 +81,46 @@ resource "aws_route_table" "paloma_public_subnet_1" {
   }
 
   tags = {
-    Name = "${local.public_subnet_1}_route_table"
+    Name = "Paloma - Public route table"
   }
 }
 
-resource "aws_route_table" "paloma_public_subnet_2" {
-  vpc_id = aws_vpc.paloma.id
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.paloma.id
-  }
-
-  tags = {
-    Name = "${local.public_subnet_2}_route_table"
-  }
-}
-
-resource "aws_route_table_association" "public_subnet_1_route_association" {
+resource "aws_route_table_association" "paloma_public_subnet_1" {
   subnet_id      = aws_subnet.paloma_public_subnet_1.id
-  route_table_id = aws_route_table.paloma_public_subnet_1.id
+  route_table_id = aws_route_table.paloma_public.id
 }
 
 
-resource "aws_route_table_association" "public_subnet_2_route_association" {
+resource "aws_route_table_association" "paloma_public_subnet_2" {
   subnet_id      = aws_subnet.paloma_public_subnet_2.id
-  route_table_id = aws_route_table.paloma_public_subnet_2.id
+  route_table_id = aws_route_table.paloma_public.id
+}
+
+resource "aws_route_table" "paloma_private_subnet_1" {
+  vpc_id = aws_vpc.paloma.id
+
+  tags = {
+    Name = "Paloma - ${local.private_subnet_1} route table"
+  }
+}
+
+resource "aws_route_table" "paloma_private_subnet_2" {
+  vpc_id = aws_vpc.paloma.id
+
+  tags = {
+    Name = "Paloma - ${local.private_subnet_2} route table"
+  }
+}
+
+resource "aws_route_table_association" "paloma_private_subnet_1" {
+  subnet_id      = aws_subnet.paloma_private_subnet_1.id
+  route_table_id = aws_route_table.paloma_private_subnet_1.id
+}
+
+
+resource "aws_route_table_association" "paloma_private_subnet_2" {
+  subnet_id      = aws_subnet.paloma_private_subnet_2.id
+  route_table_id = aws_route_table.paloma_private_subnet_2.id
 }
 
 
