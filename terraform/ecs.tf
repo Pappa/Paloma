@@ -1,5 +1,19 @@
 resource "aws_ecs_cluster" "paloma" {
   name = "paloma"
+
+  capacity_providers = [aws_ecs_capacity_provider.paloma.name]
+
+  default_capacity_provider_strategy {
+    capacity_provider = aws_ecs_capacity_provider.paloma.name
+  }
+}
+
+resource "aws_ecs_capacity_provider" "paloma" {
+  name = "paloma"
+
+  auto_scaling_group_provider {
+    auto_scaling_group_arn = aws_autoscaling_group.paloma.arn
+  }
 }
 
 resource "aws_ecs_task_definition" "paloma" {
@@ -10,7 +24,7 @@ resource "aws_ecs_task_definition" "paloma" {
   requires_compatibilities = ["EC2"]
   cpu                      = 1024
   memory                   = 512
-  container_definitions = templatefile("ecs-task-definitions/paloma_db.json.tftpl", {
+  container_definitions = templatefile("template_files/paloma_db.json.tftpl", {
     aws_region             = var.aws_region
     log_group              = aws_cloudwatch_log_group.paloma_ecs_task.name
     prefix                 = "paloma-"

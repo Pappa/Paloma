@@ -34,9 +34,10 @@ resource "aws_internet_gateway" "paloma" {
 }
 
 resource "aws_subnet" "paloma_public_subnet_1" {
-  vpc_id            = aws_vpc.paloma.id
-  availability_zone = local.az_a
-  cidr_block        = local.public_subnet_az1_cidr
+  vpc_id                  = aws_vpc.paloma.id
+  availability_zone       = local.az_a
+  cidr_block              = local.public_subnet_az1_cidr
+  map_public_ip_on_launch = true
 
   tags = {
     Name = local.public_subnet_1
@@ -44,9 +45,10 @@ resource "aws_subnet" "paloma_public_subnet_1" {
 }
 
 resource "aws_subnet" "paloma_public_subnet_2" {
-  vpc_id            = aws_vpc.paloma.id
-  availability_zone = local.az_b
-  cidr_block        = local.public_subnet_az2_cidr
+  vpc_id                  = aws_vpc.paloma.id
+  availability_zone       = local.az_b
+  cidr_block              = local.public_subnet_az2_cidr
+  map_public_ip_on_launch = true
 
   tags = {
     Name = local.public_subnet_2
@@ -179,14 +181,4 @@ resource "aws_security_group" "paloma" {
   #     to_port     = 0
   #     cidr_blocks = ["0.0.0.0/0"]
   #   }
-}
-
-resource "aws_network_interface" "paloma" {
-  subnet_id       = aws_subnet.paloma_public_subnet_1.id
-  security_groups = [aws_security_group.paloma.id]
-
-  attachment {
-    instance     = aws_instance.graph.id
-    device_index = 1
-  }
 }
