@@ -97,30 +97,6 @@ resource "aws_route_table" "paloma_public_subnet_2" {
   }
 }
 
-resource "aws_route_table" "paloma_private_subnet_1" {
-  vpc_id = aws_vpc.paloma.id
-
-  route {
-    cidr_block = local.private_subnet_az1_cidr
-  }
-
-  tags = {
-    Name = "${local.private_subnet_1}_route_table"
-  }
-}
-
-resource "aws_route_table" "paloma_private_subnet_2" {
-  vpc_id = aws_vpc.paloma.id
-
-  route {
-    cidr_block = local.private_subnet_az2_cidr
-  }
-
-  tags = {
-    Name = "${local.private_subnet_2}_route_table"
-  }
-}
-
 resource "aws_route_table_association" "public_subnet_1_route_association" {
   subnet_id      = aws_subnet.paloma_public_subnet_1.id
   route_table_id = aws_route_table.paloma_public_subnet_1.id
@@ -130,18 +106,6 @@ resource "aws_route_table_association" "public_subnet_1_route_association" {
 resource "aws_route_table_association" "public_subnet_2_route_association" {
   subnet_id      = aws_subnet.paloma_public_subnet_2.id
   route_table_id = aws_route_table.paloma_public_subnet_2.id
-}
-
-
-resource "aws_route_table_association" "private_subnet_1_route_association" {
-  subnet_id      = aws_subnet.paloma_private_subnet_1.id
-  route_table_id = aws_route_table.paloma_private_subnet_1.id
-}
-
-
-resource "aws_route_table_association" "private_subnet_2_route_association" {
-  subnet_id      = aws_subnet.paloma_private_subnet_2.id
-  route_table_id = aws_route_table.paloma_private_subnet_2.id
 }
 
 
@@ -155,8 +119,8 @@ resource "aws_security_group" "paloma" {
     to_port   = 0
     protocol  = "-1"
     cidr_blocks = [
-      local.private_subnet_az1_cidr,
-      local.private_subnet_az2_cidr
+      local.public_subnet_az1_cidr,
+      local.public_subnet_az2_cidr
     ]
     self = true
   }
