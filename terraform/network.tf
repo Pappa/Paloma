@@ -126,8 +126,9 @@ resource "aws_route_table_association" "paloma_private_subnet_2" {
 
 
 resource "aws_security_group" "paloma" {
-  name   = "paloma_security_group"
-  vpc_id = aws_vpc.paloma.id
+  name        = "paloma"
+  description = "Paloma security group"
+  vpc_id      = aws_vpc.paloma.id
 
   ingress {
     from_port = 0
