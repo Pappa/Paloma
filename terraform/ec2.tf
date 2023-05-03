@@ -33,7 +33,7 @@ resource "aws_launch_template" "paloma" {
   }
 
   user_data = base64encode(templatefile("template_files/paloma_ec2_user_data.tftpl", {
-    cluster_name = aws_ecs_cluster.paloma.name
+    cluster_name = var.paloma_ecs_cluster_name
   }))
 }
 

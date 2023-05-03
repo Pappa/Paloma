@@ -9,3 +9,7 @@ variable "aws_account" {
 variable "ORIENTDB_ROOT_PASSWORD" {
   type = string
 }
+
+variable "paloma_ecs_cluster_name" {
+  default = "paloma"
+}

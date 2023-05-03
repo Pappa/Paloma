@@ -1,5 +1,5 @@
 resource "aws_ecs_cluster" "paloma" {
-  name = "paloma"
+  name = var.paloma_ecs_cluster_name
 
   capacity_providers = [aws_ecs_capacity_provider.paloma.name]
 
