@@ -35,9 +35,8 @@ resource "aws_ecs_service" "paloma" {
   ]
 
   network_configuration {
-    security_groups  = [aws_security_group.paloma.id]
-    subnets          = [aws_subnet.paloma_public.id]
-    assign_public_ip = true
+    security_groups = [aws_security_group.paloma.id]
+    subnets         = [aws_subnet.paloma_public.id]
   }
 
   #  load_balancer {
