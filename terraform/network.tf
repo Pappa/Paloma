@@ -163,6 +163,22 @@ resource "aws_security_group" "paloma" {
     self        = true
   }
 
+  #region temp
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  #endregion
+
   #   ingress {
   #     protocol  = "tcp"
   #     from_port = 2424
