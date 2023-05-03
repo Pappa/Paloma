@@ -4,7 +4,7 @@ resource "aws_ecs_cluster" "paloma" {
 
 resource "aws_ecs_task_definition" "paloma" {
   family                   = "paloma"
-  network_mode             = "host"
+  network_mode             = "awsvpc"
   task_role_arn            = aws_iam_role.ecs_task.arn
   execution_role_arn       = aws_iam_role.ecs_task_execution.arn
   requires_compatibilities = ["EC2"]

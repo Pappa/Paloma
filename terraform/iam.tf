@@ -1,6 +1,6 @@
 resource "aws_iam_role" "ecs_task_execution" {
   name               = "paloma_db_ecs_task_execution"
-  assume_role_policy = data.aws_iam_policy_document.ecs.json
+  assume_role_policy = data.aws_iam_policy_document.ecs_assume_role.json
   managed_policy_arns = [
     "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy",
     "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role",
@@ -10,7 +10,7 @@ resource "aws_iam_role" "ecs_task_execution" {
 
 resource "aws_iam_role" "ecs_task" {
   name               = "paloma_db_ecs_task"
-  assume_role_policy = data.aws_iam_policy_document.ecs.json
+  assume_role_policy = data.aws_iam_policy_document.ecs_assume_role.json
   managed_policy_arns = [
     "arn:aws:iam::aws:policy/AmazonS3FullAccess",
     "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role",
@@ -23,13 +23,27 @@ resource "aws_iam_policy" "ecs_logs" {
   policy = data.aws_iam_policy_document.ecs_logs.json
 }
 
-data "aws_iam_policy_document" "ecs" {
+data "aws_iam_policy_document" "ecs_assume_role" {
   statement {
     actions = ["sts:AssumeRole"]
 
     principals {
-      identifiers = ["ec2.amazonaws.com", "ecs-tasks.amazonaws.com"]
+      identifiers = ["ecs-tasks.amazonaws.com"]
       type        = "Service"
+    }
+
+    condition {
+      test     = "ArnLike"
+      variable = "aws:SourceArn"
+
+      values = ["arn:aws:ecs:${var.aws_region}:${var.aws_account}:*"]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+
+      values = [var.aws_account]
     }
   }
 }
