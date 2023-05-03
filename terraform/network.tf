@@ -1,17 +1,17 @@
 locals {
-  private_subnet_1   = "Paloma - Private Subnet 1"
-  private_subnet_2   = "Paloma - Private Subnet 2"
-  public_subnet_1    = "Paloma - Public Subnet 1"
-  public_subnet_2    = "Paloma - Public Subnet 2"
-  az_a               = "${var.aws_region}a"
-  az_b               = "${var.aws_region}b"
-  az_c               = "${var.aws_region}c"
-  vpc_name           = "Paloma VPC"
-  vpc_cidr           = "10.0.0.0/16"
-  public_subnet_az1  = "10.0.1.0/27"
-  public_subnet_az2  = "10.0.1.32/27"
-  private_subnet_az1 = "10.0.2.0/27"
-  private_subnet_az2 = "10.0.2.32/27"
+  private_subnet_1        = "Paloma - Private Subnet 1"
+  private_subnet_2        = "Paloma - Private Subnet 2"
+  public_subnet_1         = "Paloma - Public Subnet 1"
+  public_subnet_2         = "Paloma - Public Subnet 2"
+  az_a                    = "${var.aws_region}a"
+  az_b                    = "${var.aws_region}b"
+  az_c                    = "${var.aws_region}c"
+  vpc_name                = "Paloma VPC"
+  vpc_cidr                = "10.0.0.0/16"
+  public_subnet_az1_cidr  = "10.0.1.0/27"
+  public_subnet_az2_cidr  = "10.0.1.32/27"
+  private_subnet_az1_cidr = "10.0.2.0/27"
+  private_subnet_az2_cidr = "10.0.2.32/27"
 }
 
 resource "aws_vpc" "paloma" {
@@ -36,7 +36,7 @@ resource "aws_internet_gateway" "paloma" {
 resource "aws_subnet" "paloma_public_subnet_1" {
   vpc_id            = aws_vpc.paloma.id
   availability_zone = local.az_a
-  cidr_block        = var.public_subnet_az1
+  cidr_block        = local.public_subnet_az1_cidr
 
   tags = {
     Name = local.public_subnet_1
@@ -46,7 +46,7 @@ resource "aws_subnet" "paloma_public_subnet_1" {
 resource "aws_subnet" "paloma_public_subnet_2" {
   vpc_id            = aws_vpc.paloma.id
   availability_zone = local.az_b
-  cidr_block        = var.public_subnet_az2
+  cidr_block        = local.public_subnet_az2_cidr
 
   tags = {
     Name = local.public_subnet_2
@@ -56,7 +56,7 @@ resource "aws_subnet" "paloma_public_subnet_2" {
 resource "aws_subnet" "paloma_private_subnet_1" {
   vpc_id            = aws_vpc.paloma.id
   availability_zone = local.az_a
-  cidr_block        = var.private_subnet_az1
+  cidr_block        = local.private_subnet_az1_cidr
 
   tags = {
     Name = local.private_subnet_1
@@ -66,7 +66,7 @@ resource "aws_subnet" "paloma_private_subnet_1" {
 resource "aws_subnet" "paloma_private_subnet_2" {
   vpc_id            = aws_vpc.paloma.id
   availability_zone = local.az_b
-  cidr_block        = var.private_subnet_az2
+  cidr_block        = local.private_subnet_az2_cidr
 
   tags = {
     Name = local.private_subnet_2
@@ -155,8 +155,8 @@ resource "aws_security_group" "paloma" {
     to_port   = 0
     protocol  = "-1"
     cidr_blocks = [
-      var.private_subnet_az1,
-      var.private_subnet_az2
+      local.private_subnet_az1_cidr,
+      local.private_subnet_az2_cidr
     ]
     self = true
   }
