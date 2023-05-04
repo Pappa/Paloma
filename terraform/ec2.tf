@@ -26,7 +26,10 @@ resource "aws_launch_template" "paloma" {
   image_id                             = data.aws_ami.aws_optimized_ecs.id
   instance_type                        = "t3.micro"
   instance_initiated_shutdown_behavior = "terminate"
-  vpc_security_group_ids               = [aws_security_group.paloma.id]
+  vpc_security_group_ids = [
+    aws_security_group.paloma_service.id,
+    aws_security_group.paloma_load_balancer.id
+  ]
 
   iam_instance_profile {
     name = aws_iam_instance_profile.ecs_instance_profile.name

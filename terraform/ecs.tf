@@ -32,21 +32,6 @@ resource "aws_ecs_task_definition" "paloma" {
     ORIENTDB_OPTS_MEMORY   = "-Xmx512m"
   })
 
-  network_configuration {
-    subnets          = aws_subnet.paloma_private.*.id
-    assign_public_ip = false
-    security_groups = [
-      aws_security_group.paloma_service.id,
-      aws_security_group.paloma_load_balancer.id
-    ]
-  }
-
-  load_balancer {
-    target_group_arn = aws_lb_target_group.target_group.arn
-    container_name   = "${var.app_name}-${var.app_environment}-container"
-    container_port   = 8080
-  }
-
   depends_on = [aws_lb_listener.paloma_http]
 }
 
@@ -66,18 +51,19 @@ resource "aws_ecs_service" "paloma" {
   ]
 
   network_configuration {
+    subnets          = aws_subnet.paloma_private.*.id
+    assign_public_ip = false
     security_groups = [
       aws_security_group.paloma_service.id,
       aws_security_group.paloma_load_balancer.id
     ]
-    subnets = aws_subnet.paloma_private.*.id
   }
 
-  #  load_balancer {
-  #    target_group_arn = var.aws_alb_target_group_arn
-  #    container_name   = "paloma"
-  #    container_port   = var.container_port
-  #  }
+  load_balancer {
+    target_group_arn = aws_lb_target_group.paloma_http.arn
+    container_name   = "paloma"
+    container_port   = 2480
+  }
 
   #   lifecycle {
   #     ignore_changes = [task_definition]
