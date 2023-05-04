@@ -110,7 +110,7 @@ resource "aws_security_group" "paloma_service" {
 }
 
 resource "aws_alb" "paloma_load_balancer" {
-  name               = "Paloma ALB"
+  name               = "paloma-alb"
   internal           = false
   load_balancer_type = "application"
   subnets            = aws_subnet.paloma_public.*.id
@@ -153,7 +153,7 @@ resource "aws_security_group" "paloma_load_balancer" {
 }
 
 resource "aws_lb_target_group" "paloma_http" {
-  name        = "Paloma HTTP"
+  name        = "paloma-http"
   port        = 2480
   protocol    = "HTTP"
   target_type = "ip"

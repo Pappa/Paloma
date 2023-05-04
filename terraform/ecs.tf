@@ -66,8 +66,11 @@ resource "aws_ecs_service" "paloma" {
   ]
 
   network_configuration {
-    security_groups = [aws_security_group.paloma.id]
-    subnets         = aws_subnet.paloma_private.*.id
+    security_groups = [
+      aws_security_group.paloma_service.id,
+      aws_security_group.paloma_load_balancer.id
+    ]
+    subnets = aws_subnet.paloma_private.*.id
   }
 
   #  load_balancer {
