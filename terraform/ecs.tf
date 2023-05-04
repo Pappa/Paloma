@@ -47,7 +47,7 @@ resource "aws_ecs_task_definition" "paloma" {
     container_port   = 8080
   }
 
-  depends_on = [aws_lb_listener.listener]
+  depends_on = [aws_lb_listener.paloma_http]
 }
 
 resource "aws_ecs_service" "paloma" {
