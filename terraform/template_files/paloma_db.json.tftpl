@@ -3,7 +3,7 @@
         "image": "public.ecr.aws/docker/library/orientdb:latest",
         "cpu": 512,
         "name": "paloma",
-        "networkMode": "host",
+        "networkMode": "awsvpc",
         "portMappings": [
             {
                 "containerPort": 2424,
@@ -12,10 +12,6 @@
             {
                 "containerPort": 2480,
                 "hostPort": 2480
-            },
-            {
-                "containerPort": 3000,
-                "hostPort": 3000
             }
         ],
         "logConfiguration": {

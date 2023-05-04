@@ -38,14 +38,11 @@ resource "aws_launch_template" "paloma" {
 }
 
 resource "aws_autoscaling_group" "paloma" {
-  desired_capacity = 1
-  max_size         = 2
-  min_size         = 1
-  name             = "paloma"
-  vpc_zone_identifier = [
-    aws_subnet.paloma_public_subnet_1.id,
-    aws_subnet.paloma_public_subnet_1.id
-  ]
+  desired_capacity    = 1
+  max_size            = 2
+  min_size            = 1
+  name                = "paloma"
+  vpc_zone_identifier = aws_subnet.paloma_private.*.id
 
   instance_refresh {
     strategy = "Rolling"

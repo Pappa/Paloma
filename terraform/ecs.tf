@@ -18,7 +18,7 @@ resource "aws_ecs_capacity_provider" "paloma" {
 
 resource "aws_ecs_task_definition" "paloma" {
   family                   = "paloma"
-  network_mode             = "host"
+  network_mode             = "awsvpc"
   task_role_arn            = aws_iam_role.ecs_task.arn
   execution_role_arn       = aws_iam_role.ecs_task_execution.arn
   requires_compatibilities = ["EC2"]
@@ -31,6 +31,23 @@ resource "aws_ecs_task_definition" "paloma" {
     ORIENTDB_ROOT_PASSWORD = var.ORIENTDB_ROOT_PASSWORD
     ORIENTDB_OPTS_MEMORY   = "-Xmx512m"
   })
+
+  network_configuration {
+    subnets          = aws_subnet.paloma_private.*.id
+    assign_public_ip = false
+    security_groups = [
+      aws_security_group.paloma_service.id,
+      aws_security_group.paloma_load_balancer.id
+    ]
+  }
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.target_group.arn
+    container_name   = "${var.app_name}-${var.app_environment}-container"
+    container_port   = 8080
+  }
+
+  depends_on = [aws_lb_listener.listener]
 }
 
 resource "aws_ecs_service" "paloma" {
@@ -50,10 +67,7 @@ resource "aws_ecs_service" "paloma" {
 
   network_configuration {
     security_groups = [aws_security_group.paloma.id]
-    subnets = [
-      aws_subnet.paloma_public_subnet_1.id,
-      aws_subnet.paloma_public_subnet_2.id
-    ]
+    subnets         = aws_subnet.paloma_private.*.id
   }
 
   #  load_balancer {
