@@ -79,7 +79,7 @@ resource "aws_route" "paloma_public" {
 }
 
 resource "aws_route_table_association" "paloma_public" {
-  count          = length(var.public_subnets)
+  count          = length(local.public_subnets)
   subnet_id      = element(aws_subnet.paloma_public.*.id, count.index)
   route_table_id = aws_route_table.paloma_public.id
 }
